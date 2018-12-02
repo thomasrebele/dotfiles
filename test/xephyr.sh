@@ -5,6 +5,8 @@
 # - xautomation
 # - xdotool
 # - lightdm
+#
+# To grab keyboard: Press ctrl, press shift, release shift, release ctrl
 
 # create temporary user
 ### #user=tmp_$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
@@ -37,14 +39,4 @@ done
 
 ## read -p "print any key to clean up" -n 1 -s
 
-# kill processes of temporary user
-while ps -eo user | grep --quiet $user; do
-	for i in $(ps -eo pid,user | grep $user | awk '{print $1}'); do
-		sudo kill -9 $i
-	done
-	sleep 1
-done
-
-# delete temporary user
-sudo deluser $user
-
+./test-xephyr-cleanup.sh
