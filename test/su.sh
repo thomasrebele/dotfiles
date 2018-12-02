@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # A script to test the command line part of the dotfiles, using the su command.
+# Usage: <command> <args...>
+# Recommended: install.sh basic
 
 # create temporary user
 ### #user=tmp_$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
