@@ -39,4 +39,4 @@ done
 
 ## read -p "print any key to clean up" -n 1 -s
 
-./test-xephyr-cleanup.sh
+$(dirname "$0")/cleanup-xephyr.sh
