@@ -11,5 +11,9 @@ while ps -eo user | grep --quiet $user; do
 done
 
 # delete temporary user
-sudo deluser $user
+if [ "$keep_files" == true ]; then
+	sudo deluser $user
+else
+	sudo deluser --remove-home $user
+fi
 
