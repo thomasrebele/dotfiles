@@ -9,9 +9,13 @@ pwd=a
 
 sudo /usr/sbin/useradd -p $(openssl passwd -1 $pwd)  $user
 
+keep_user=false
 keep_files=false
 
-if [ "$1" == "--keep-files" ]; then
+if [ "$1" == "--keep" ]; then
+	keep_user=true
+	shift 1
+elif [ "$1" == "--keep-files" ]; then
 	keep_files=true
 	shift 1
 fi
