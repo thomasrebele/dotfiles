@@ -61,12 +61,18 @@ COMPLETION_WAITING_DOTS="true"
 	source $ZSH/oh-my-zsh.sh
 else
 	echo "oh-my-zsh not available"
-	
+
+PROMPT='[BASIC] %F{white}%n@%m %*:%B%~%b%f%(!.#.$) '
+
 	setopt INC_APPEND_HISTORY 
 	HISTSIZE=200000                                # this zsh's history size
 	SAVEHIST=100000                                     # never touch HISTFILE
 	HISTFILE=~/.zshhistory                         # history file name
 	zmodload zsh/datetime                          # needed for EPOCHSECONDS
+
+	# vim input mode
+	bindkey -v
+	export KEYTIMEOUT=1
 
 	bindkey '^[[5~' up-line-or-history
 	bindkey '^[[6~' down-line-or-history

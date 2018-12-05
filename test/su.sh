@@ -22,10 +22,9 @@ elif [ "$1" == "--keep-files" ]; then
 	shift 1
 fi
 
-
 if [ "$#" -ge "1" ]; then
 	echo $0: executing "$@"
-	sudo su $user "$@"
+	sudo su $user -- "$@"
 
 fi
 

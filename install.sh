@@ -1,5 +1,27 @@
 #!/bin/bash
 
+# command line arguments
+
+echo "installing dotfiles"
+
+link_repo="false"
+
+while :; do
+	echo "parse $1"
+	case $1 in 
+		--link-repo)
+			link_repo="true"
+			;;
+		-?*)
+			printf "Unknown option: %s\n" "$1" >&2
+			;;
+		*)
+			break
+	esac
+	shift
+done
+
+echo "done parsing, link_repo=$link_repo"
 
 dotdir=$(realpath -s ~/.dotfiles2)
 
@@ -8,8 +30,15 @@ echo "setting up dotfiles for user $(whoami) at $dotdir"
 # clone dotfile repository
 if [ ! -e $dotdir ]; then
 	cd ~/
-	git clone http://github.com/thomasrebele/dotfiles
-	mv dotfiles $dotdir
+
+	# TODO: provide this from outside
+	export DOTFILES_REPO=/home/tr/.dotfiles2
+	if [ "$link_repo" = "true" ]; then
+		ln -s $DOTFILES_REPO $dotdir
+	else
+		git clone http://github.com/thomasrebele/dotfiles
+		mv dotfiles $dotdir
+	fi
 fi
 
 cd $dotdir
