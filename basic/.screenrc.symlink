@@ -1,0 +1,11 @@
+
+caption always "%{= b}%-w%{= G}%n %t%{-}%+w %-=%{G}%c %D, %d %M, %Y "
+
+# no info message on startup
+startup_message off
+
+# clear vim window after quitting
+altscreen on
+
+# number of lines available in history
+defscrollback 100000

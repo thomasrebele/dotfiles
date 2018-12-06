@@ -58,7 +58,7 @@ install_category() {
 	for file in $(ls -1a | grep ".symlink"); do
 		filename=${file%".symlink"}
 		src=$(realpath -s $file)
-		dst=~/$(realpath --relative-to="$(pwd)" $filename)
+		dst=$(realpath -s $2/$filename)
 		if [ ! -L $dst ]; then
 
 			# TODO: provide an option --force?
@@ -70,6 +70,20 @@ install_category() {
 			ln -s $src  $dst
 		fi
 	done
+
+	# create dir files
+	for file in $(ls -1a | grep ".dir"); do
+		dirname=${file%".dir"}
+		dst=$(realpath -s $2/$dirname)
+
+		if [ ! -d $dst ]; then
+			echo "creating directory $dst"
+			mkdir $dst
+		fi
+
+		install_category $file $dst
+	done
+
 }
 
 for category in $*
@@ -79,6 +93,6 @@ do
 	echo "--------------------------------------------------------------------------------"
 
 	cd $dotdir
-	install_category $(realpath -s $category)
+	install_category $(realpath -s $category) ~
 done
 
