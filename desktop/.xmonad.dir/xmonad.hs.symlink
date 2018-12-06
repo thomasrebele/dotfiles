@@ -1,0 +1,218 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
+import XMonad
+
+import Data.Ratio 
+
+import XMonad.Config.Xfce
+import XMonad.Config.Desktop
+import Data.Monoid
+import qualified Data.Map as M
+import qualified XMonad.StackSet as W
+import XMonad.Util.EZConfig
+
+import XMonad.Actions.Submap
+import XMonad.Actions.SpawnOn
+import XMonad.Actions.CycleWS
+import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.WindowBringer
+
+import XMonad.Prompt
+import XMonad.Prompt.Ssh
+import XMonad.Prompt.Window
+import XMonad.Prompt.Workspace
+import XMonad.Prompt.Input
+
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageHelpers
+
+import XMonad.Layout.IndependentScreens
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Circle
+import XMonad.Layout.Grid
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.ShowWName
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Spiral
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+
+-- sticky windows
+import XMonad.Actions.CopyWindow
+
+-- myConfig = defaultConfig
+-- myConfig = xfceConfig
+myConfig = desktopConfig
+myXPConfig = defaultXPConfig
+
+--myLayout = layoutHook myConfig
+--myLayout = mkToggle (single MIRROR) (ResizableTall 1 (3/100) (1/2) [] ||| Full)
+--	avoidStruts (
+--		ResizableTall 1 (3/100) (1/2) [] |||
+--		Mirror (ResizableTall 1 (3/100) (1/2) []) |||
+--		spiral (16/19)
+--	) |||
+--	noBorders (fullscreenFull Full)
+
+myLayout = id
+     . XMonad.Layout.NoBorders.smartBorders
+     . mkToggle (NOBORDERS ?? FULL ?? EOT)
+     . mkToggle (single MIRROR)
+     $ 
+        ResizableTall 1 (3/100) (1/2) [] 
+        ||| spiral (16/19)
+
+myManageHook = composeAll [ 
+		resource =? "vit" --> doShift "9",
+		className =? "Xfce4-notifyd" --> doIgnore,
+		className =? "xfdesktop" --> doIgnore,
+		className =? "Workrave" --> doF (copyToAll),
+		className =? "Firefox" --> doShift "3",
+		className =? "Thunderbird" --> doShift "9",
+		className =? "KeePass2" --> doShift "8",
+		className =? "Eclipse" --> doShift "1",
+		className =? "Java" --> doShift "1" -- eclipse spash screen
+	]
+
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+main = 
+	xmonad $ myConfig {
+		workspaces = myWorkspaces,
+		modMask = mod4Mask,
+		terminal = "gnome-terminal",
+		focusFollowsMouse = False,
+		keys = myKeys,
+		borderWidth = 1,
+
+		-- hooks
+		manageHook = myManageHook <+> manageDocks <+> (isFullscreen --> doFullFloat) <+> manageHook myConfig,
+		layoutHook = avoidStruts $ showWName myLayout,
+		-- startupHook = startupHook desktopConfig <+> (windows $ (W.greedyView 9))
+		startupHook = do 
+			windows $ (W.greedyView "9")
+			setWMName "LG3D"
+--			sendMessage $ Toggle FULL
+
+	} 
+
+
+-- ATTENTION: somehow keybindings are ignored???
+myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
+ 
+    -- Start applications
+    ---- terminal
+    [ ((modMask,               xK_Return)       , spawn $ XMonad.terminal conf)
+    ---- lock
+    , ((modMask,               xK_l)            , spawn "xflock4")
+    ---- launch menu
+    , ((modMask,               xK_b     ), spawn "dmenu_run")
+    ---- Debug X environment variables
+    , ((modMask .|. shiftMask, xK_d     ), spawn "~/.dotfiles/scripts/debug-x-env.sh")
+
+    -- close focused window 
+    , ((modMask .|. shiftMask, xK_c     ), kill)
+    , ((modMask .|. shiftMask .|. controlMask, xK_c     ), kill1)
+ 
+     -- Rotate through the available layout algorithms
+    , ((modMask,               xK_space ), sendMessage NextLayout)
+ 
+    --  Reset the layouts on the current workspace to default
+    , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+
+   , ((modMask,                xK_Tab   ), sendMessage $ Toggle MIRROR)
+   , ((modMask,                xK_o     ), rectFloatFocused)
+   , ((modMask,                xK_f     ), sendMessage $ Toggle FULL)
+   , ((modMask .|. shiftMask,  xK_f     ), sendMessage $ ToggleStruts )
+ 
+    -- Move focus to the next/previous/master window
+    , ((modMask,               xK_r     ), windows W.focusDown)
+    , ((modMask,               xK_p     ), windows W.focusDown)
+    , ((modMask,               xK_n     ), windows W.focusUp  )
+    , ((modMask,               xK_m     ), windows W.focusMaster  )
+
+    -- Swap the focused window and the next/previous/master window
+    , ((modMask .|. shiftMask, xK_r     ), windows W.swapDown  )
+    , ((modMask .|. shiftMask, xK_n     ), windows W.swapUp    )
+    --, ((modMask,               xK_Return), windows W.swapMaster)
+ 
+    -- Shrink/Expand the master area
+    , ((modMask,               xK_h     ), sendMessage Shrink)
+    , ((modMask,               xK_g     ), sendMessage Expand)
+
+    -- Shrink/Expand slave area?
+    , ((modMask .|. shiftMask, xK_g), sendMessage MirrorShrink)
+    , ((modMask .|. shiftMask, xK_h), sendMessage MirrorExpand)
+
+    -- Increment/decrement the number of windows in the master area
+    , ((modMask              , xK_comma ), sendMessage (IncMasterN 1))
+    , ((modMask              , xK_period), sendMessage (IncMasterN (-1)))
+ 
+
+    -- WindowBringer
+    , ((modMask , xK_k     ), gotoMenu)
+    , ((modMask .|. shiftMask , xK_k     ), bringMenu)
+
+    -- submap, press win+d, and then key of submap
+    , ((modMask ,                xK_d)       , submap . M.fromList $
+       [ ((0,            xK_w)      ,   toggleWS) 
+
+       -- switch to different screen
+       , ((0,            xK_q)      ,   viewScreen def 0)
+       , ((0,            xK_w)      ,   viewScreen def 1)
+      
+       -- Sticky windows (on all workspaces)
+       , ((0,                  xK_c)      ,   windows copyToAll)
+       , ((0 .|. shiftMask,    xK_c)      ,   killAllOtherCopies)
+
+
+       -- Push window back into tiling
+       , ((0,               xK_t     ), withFocused $ windows . W.sink)
+
+       -- Push window back into tiling
+       , ((0,               xK_f     ), sendMessage $ Toggle NOBORDERS)
+
+
+
+       -- Restart xmonad
+       , ((shiftMask,       xK_r     ),
+          broadcastMessage ReleaseResources >> restart "xmonad" True)
+
+       -- Resize viewed windows to the correct size
+       , ((shiftMask,       xK_n     ), refresh)
+       ] ++
+       
+       -- switch to different workspace
+       [((0, k), windows $ W.greedyView i)
+        | (i, k) <- zip (take 10 (XMonad.workspaces conf)) [xK_1 ..]
+       ])
+    ]
+    ++
+ 
+    -- mod-[1..9], Switch to workspace N
+    -- mod-shift-[1..9], Move client to workspace N
+    [((m .|. modMask, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
+    ++
+
+    [((m .|. modMask, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F9]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
+    ++
+ 
+    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    [((modMask .|. mask, key), f sc)
+        | (key, sc) <- zip [xK_x, xK_v, xK_l] [0..]
+        , (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]]
+    where
+        rectFloatFocused = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0 0.0 1.0 2.0) f
+
+

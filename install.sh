@@ -41,7 +41,9 @@ fi
 cd $dotdir
 
 # function for installing a category
-install_category() {
+install_category() (
+	echo ""
+	echo "installing $1 into $2"
 	cd $1
 
 	# execute install.sh
@@ -63,7 +65,7 @@ install_category() {
 
 			# TODO: provide an option --force?
 			if [ -e $dst ]; then
-				rm $dst
+				rm -rf $dst
 			fi
 
 			echo "installing $filename ($dst -> $src)"
@@ -81,10 +83,9 @@ install_category() {
 			mkdir $dst
 		fi
 
-		install_category $file $dst
+		install_category $(realpath -s $file) $dst
 	done
-
-}
+)
 
 for category in $*
 do

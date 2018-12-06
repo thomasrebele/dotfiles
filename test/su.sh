@@ -25,7 +25,6 @@ fi
 if [ "$#" -ge "1" ]; then
 	echo $0: executing "$@"
 	sudo su $user -- "$@"
-
 fi
 
 sudo su - $user

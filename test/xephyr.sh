@@ -15,6 +15,23 @@ pwd=a
 
 sudo /usr/sbin/useradd -p $(openssl passwd -1 $pwd)  $user
 
+keep_user=false
+keep_files=false
+
+if [ "$1" == "--keep" ]; then
+	keep_user=true
+	shift 1
+elif [ "$1" == "--keep-files" ]; then
+	keep_files=true
+	shift 1
+fi
+
+# executing install command
+if [ "$#" -ge "1" ]; then
+	echo $0: executing "$@"
+	sudo su $user -- "$@"
+fi
+
 # create nested session
 dm-tool add-nested-seat --screen 1000x800
 sleep 2
@@ -39,4 +56,4 @@ done
 
 ## read -p "print any key to clean up" -n 1 -s
 
-$(dirname "$0")/cleanup.sh
+. $(dirname "$0")/cleanup.sh
