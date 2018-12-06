@@ -1,0 +1,10 @@
+
+
+alias vim="vim -p"
+alias vi="vim -p"
+alias ls="ls --group-directories --color"
+alias python=python3
+alias xc="xclip -selection clipboard"
+alias tmux="tmux -2"
+
+

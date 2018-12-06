@@ -146,8 +146,8 @@ fi
 setopt NO_HUP
 setopt NO_CHECK_JOBS
 
-if [ -d ~/.dotfiles ]; then
-	. $HOME/.dotfiles/env.sh
+if [ -e ~/.env-vars ]; then
+	. $HOME/.env-vars
 fi
 
 # map ctrl+n to ctrl+d

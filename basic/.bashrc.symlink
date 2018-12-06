@@ -1,0 +1,151 @@
+#!/bin/bash
+# additions to .bashrc, load with
+#
+# if [ -f ~/.dotfiles/.bashrc ]; then
+#     . ~/.dotfiles/.bashrc
+# fi
+#
+
+# don't put duplicate lines in the history. See bash(1) for more options
+# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
+#export HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
+# ... or force ignoredups and ignorespace
+export HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoreboth:erasedups
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=20000000
+export HISTFILESIZE=20000000
+
+_bash_history_sync() {
+  builtin history -a         #1
+  HISTFILESIZE=$HISTSIZE     #2
+#  builtin history -c         #3
+#  builtin history -r         #4
+}
+
+history() {                  #5
+  _bash_history_sync
+  builtin history "$@"
+}
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+# reedit a history substitution line if it failed
+shopt -s histreedit
+# edit a recalled history line before executing
+shopt -s histverify
+# fallback, this gets managed by bash-git-prompt
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+# bash prompt for git repositories
+
+## Set config variables first
+##GIT_PROMPT_ONLY_IN_REPO=1
+#
+## GIT_PROMPT_FETCH_REMOTE_STATUS=0   # uncomment to avoid fetching remote status
+#
+## GIT_PROMPT_SHOW_UPSTREAM=1 # uncomment to show upstream tracking branch
+#GIT_PROMPT_SHOW_UNTRACKED_FILES=no # can be no, normal or all; determines counting of untracked files
+#
+## GIT_PROMPT_STATUS_COMMAND=gitstatus_pre-1.7.10.sh # uncomment to support Git older than 1.7.10
+#
+##GIT_PROMPT_START='\u@\h:$(python ~/.dotfiles/short.pwd.py)'     # uncomment for custom prompt start sequence
+#GIT_PROMPT_END='$ '      # uncomment for custom prompt end sequence
+#
+## as last entry source the gitprompt script
+#GIT_PROMPT_THEME=Custom # use custom .git-prompt-colors.sh
+##GIT_PROMPT_THEME=Solarized # use theme optimized for solarized color scheme
+#GIT_PROMPT_THEME_FILE=~/.dotfiles/Custom.bgptemplate 
+#source ~/.dotfiles/software/bash-git-prompt/gitprompt.sh
+#
+#export PS_PROMPT_COMMAND='PS1="$GIT_PROMPT_START$ "; echo -ne "\033]0;${PS1}\007"'
+#export PS_PROMPT_COMMAND='PS1="\u@\h: "; echo -ne "\033]0;${PS1}\007"'
+#export PROMPT_COMMAND="history_sync; $PS_PROMPT_COMMAND;"
+
+hostname=$(hostname)
+echo "Working on '$hostname'"
+
+export HISTCONTROL=ignoredups
+export EDITOR=vim
+
+# use iso 8601 date and time stamp format
+export TIME_STYLE=long-iso
+[ "$LC_ALL" != "$LC_TIME" ] && unset LC_ALL
+
+if [ -f ~/.dotfiles/software/z/z.sh ]; then
+	. ~/.dotfiles/software/z/z.sh
+fi
+if [ -f ~/.env-vars ]; then
+	. $HOME/.env-vars
+fi
+
+if [ "$hostname" == "e320" ]; then
+	export PULSE_LATENCY_MSEC=50
+
+	export BROWSER=/home/tr/bin/firefox
+	export PATH=$PATH:$HOME/.path/
+	export XDG_TEMPLATE_DIR=$HOME/.templates/
+
+	# login info
+	wd="$PWD"
+	cd ~/Projekte/env/java/workingtime/build
+	java -jar workingtime.jar
+	cd "$wd"
+
+	export ANDROID_HOME=/opt/android-sdk-linux/
+
+	ereignis=$(expr $(date +%s ) - $(date -d "20110812" +%s))
+	ereignis=$(expr $ereignis / 60 / 60 / 24)
+	ereignisyear=$(echo "scale=0;$ereignis/30.43688/12" | bc)
+	ereignismon=$(echo "scale=2;$ereignis/30.43688 - 12 * $ereignisyear" | bc)
+	#echo "$ereignis Tage seit Ereignis, das entspricht rund $ereignisyear Jahre und $ereignismon Monate"
+
+	export LD_LIBRARY_PATH=$CMAKE_PREFIX_PATH/lib/:$LD_LIBRARY_PATH
+	export PKG_CONFIG_PATH=$CMAKE_PREFIX_PATH/lib/pkgconfig:$PKG_CONFIG_PATH
+
+	export PATH=$HOME/.cabal/bin:$PATH
+	export MANPATH=$MANPATH:$HOME/.cabal/share/x86_64-linux-ghc-7.8.4/xmonad-0.11.1/man
+
+	# export WINEARCH=win32
+
+elif [ "$hostname" == "rebele-e6540" ]; then
+
+	export PATH=/home/tr/workspace/e6540/factchecker/lib/reference-coreference-scorers:$HOME/.cabal/bin:$PATH
+	export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
+
+	/usr/sbin/anacron -S /home/tr/.dotfiles/cron/spool/ -t /home/tr/.dotfiles/cron/anacrontab
+
+	cat /home/tr/backup/cron-daily-status
+
+	export GOPATH=$HOME/software/go
+	export PATH=$GOPATH:$GOPATH/bin:$PATH
+	alias python3=/usr/bin/python3.5
+
+elif [ "$hostname" == "lame10.enst.fr" ]; then
+	export JAVA_HOME=$HOME/software/java/jdk1.8.0_45/
+
+	export PATH=~/software/git-cola/bin:$PATH
+
+elif [ "$hostname" == "elvis" ]; then
+
+	export PATH=~/software/git/build/bin:$PATH
+	export JAVA_HOME=$HOME/software/java/jdk1.8.0_45
+
+fi
+
+export PATH=$JAVA_HOME/bin:$PATH
+

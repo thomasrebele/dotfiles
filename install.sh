@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# command line arguments
-
-echo "installing dotfiles"
-
+# default options
 link_repo="false"
+dotdir=$(realpath -s ~/.dotfiles2)
 
+# command line arguments
 while :; do
 	echo "parse $1"
 	case $1 in 
@@ -21,9 +20,6 @@ while :; do
 	shift
 done
 
-echo "done parsing, link_repo=$link_repo"
-
-dotdir=$(realpath -s ~/.dotfiles2)
 
 echo "setting up dotfiles for user $(whoami) at $dotdir"
 
@@ -41,8 +37,10 @@ if [ ! -e $dotdir ]; then
 	fi
 fi
 
+# dotfile repository created, now we can go into it
 cd $dotdir
 
+# function for installing a category
 install_category() {
 	cd $1
 
@@ -56,26 +54,23 @@ install_category() {
 		echo "doesn't exist"
 	fi
 
-	# symlink files
-
+	# create symlink files
 	for file in $(ls -1a | grep ".symlink"); do
 		filename=${file%".symlink"}
 		src=$(realpath -s $file)
 		dst=~/$(realpath --relative-to="$(pwd)" $filename)
 		if [ ! -L $dst ]; then
 
+			# TODO: provide an option --force?
 			if [ -e $dst ]; then
 				rm $dst
 			fi
 
-			echo "installing $filename ($src -> $dst)"
+			echo "installing $filename ($dst -> $src)"
 			ln -s $src  $dst
 		fi
 	done
-
 }
-
-
 
 for category in $*
 do

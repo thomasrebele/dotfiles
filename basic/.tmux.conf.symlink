@@ -1,0 +1,63 @@
+# based on https://stackoverflow.com/a/40902312/1046584
+run-shell "tmux setenv -g TMUX_VERSION $(tmux -V | cut -c 6-)"
+
+# Set a Ctrl-b shortcut for reloading your tmux config
+bind r source-file ~/.tmux.conf
+
+# Rename your terminals
+set -g set-titles on
+set -g set-titles-string '#(whoami)::#h::#(curl ipecho.net/plain;echo)'
+
+# Set scroll back buffer size
+set-option -g history-limit 50000
+
+## Status bar customization
+## set -g status-utf8 on
+#set -g status-bg black
+#set -g status-fg white
+#set -g status-interval 5
+#set -g status-left-length 90
+#set -g status-right-length 60
+#set -g status-justify left
+#set -g status-right '#[fg=Cyan]#S #[fg=white]%a %d %b %R' 
+
+# Remap window navigation to vim
+unbind-key j
+bind-key j select-pane -D
+unbind-key k
+bind-key k select-pane -U
+unbind-key h
+bind-key h select-pane -L
+unbind-key l
+bind-key l select-pane -R
+
+# mouse support
+setw -g mouse
+#bind -n Pageup copy-mode -u
+
+# new window in same dir
+bind-key c new-window -c "#{pane_current_path}"
+bind-key % split-window -h -c "#{pane_current_path}"
+bind-key '"' split-window -v -c "#{pane_current_path}"
+
+# vim bindings for copy mode
+# first old mode,
+# then new mode
+bind P paste-buffer
+if-shell -b '[ "$(echo "$TMUX_VERSION < 2.4" | bc)" = 1 ]' \
+	' \
+	bind-key -t vi-copy 'v' begin-selection ; \
+	bind-key -t vi-copy 'y' copy-selection ; \
+	bind-key -t vi-copy 'r' rectangle-toggle ; ' \
+	' \
+	bind-key -T copy-mode-vi 'v' begin-selection ; \
+	bind-key -T copy-mode-vi 'y' copy-selection ; \
+	bind-key -T copy-mode-vi 'r' rectangle-toggle ; ' \
+
+
+# copy into clipboard buffer
+if-shell -b '[ "$(echo "$TMUX_VERSION < 2.4" | bc)" = 1 ]' \
+	'bind -t vi-copy y copy-pipe "xclip -sel clip -i"; ' \
+	'bind -T copy-mode-vi y copy-pipe "xclip -sel clip -i"; ' \
+
+set -g @plugin 'tmux-plugins/tmux-yank'
