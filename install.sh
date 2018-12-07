@@ -46,45 +46,68 @@ install_category() (
 	echo "installing $1 into $2"
 	cd $1
 
-	# execute install.sh
-	file=$(realpath -s ./install.sh)
-	echo looking for $file
-	if [ -f $file ]; then
-		echo executing $file
-		. $file
-	else
-		echo "doesn't exist"
-	fi
 
-	# create symlink files
-	for file in $(ls -1a | grep ".symlink"); do
-		filename=${file%".symlink"}
-		src=$(realpath -s $file)
-		dst=$(realpath -s $2/$filename)
-		if [ ! -L $dst ]; then
+	for file in $(/bin/ls -a1); do
+		case $file in
 
-			# TODO: provide an option --force?
-			if [ -e $dst ]; then
-				rm -rf $dst
-			fi
+			.);;
+			..);;
 
-			echo "installing $filename ($dst -> $src)"
-			ln -s $src  $dst
-		fi
+			# execute install.sh
+			install.sh)
+				file=$(realpath -s ./install.sh)
+				echo looking for $file
+				if [ -f $file ]; then
+					echo executing $file
+					. $file
+				else
+					echo "install.sh must be a file"
+				fi
+				;;
+
+			# create symlink files
+			*.symlink) 
+				filename=${file%".symlink"}
+				src=$(realpath -s $file)
+				dst=$(realpath -s $2/$filename)
+				if [ ! -L $dst ]; then
+
+					# TODO: provide an option --force?
+					if [ -e $dst ]; then
+						rm -rf $dst
+					fi
+
+					echo "installing $filename ($dst -> $src)"
+					ln -s $src  $dst
+				fi			
+				;;
+
+			# create dir files
+			*.dir) 
+				dirname=${file%".dir"}
+				dst=$(realpath -s $2/$dirname)
+
+				if [ ! -d $dst ]; then
+					echo "creating directory $dst"
+					mkdir $dst
+				fi
+
+				install_category $(realpath -s $file) $dst
+				;;
+
+			# install sub-categories
+			*)
+				file=$(realpath -s $file)
+				if [ -d "$file" ]; then
+					echo "install sub-category " $file
+					install_category $file $2
+				else
+					echo "ignoring $file"
+				fi
+				;;
+		esac
 	done
 
-	# create dir files
-	for file in $(ls -1a | grep ".dir"); do
-		dirname=${file%".dir"}
-		dst=$(realpath -s $2/$dirname)
-
-		if [ ! -d $dst ]; then
-			echo "creating directory $dst"
-			mkdir $dst
-		fi
-
-		install_category $(realpath -s $file) $dst
-	done
 )
 
 for category in $*
