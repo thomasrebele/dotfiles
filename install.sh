@@ -95,15 +95,20 @@ install_category() (
 				install_category $(realpath -s $file) $dst
 				;;
 
+
 			# install sub-categories
-			*)
+			*.install)
 				file=$(realpath -s $file)
 				if [ -d "$file" ]; then
 					echo "install sub-category " $file
 					install_category $file $2
 				else
-					echo "ignoring $file"
+					echo "$file must be a directory"
 				fi
+				;;
+
+			*)
+				echo "ignoring $file"
 				;;
 		esac
 	done
