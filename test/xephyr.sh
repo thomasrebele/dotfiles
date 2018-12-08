@@ -26,15 +26,13 @@ elif [ "$1" == "--keep-files" ]; then
 	shift 1
 fi
 
-# executing install command
-if [ "$#" -ge "1" ]; then
-	echo $0: executing "$@"
-	sudo su $user -- "$@"
-fi
-
 # create nested session
 dm-tool add-nested-seat --screen 1000x800
 sleep 2
+
+# search display
+# TODO: find DISPLAY dynamically?
+DISPLAY=:1.0
 
 # login temporary user
 xdotool type tmptr
@@ -43,13 +41,28 @@ sleep 1
 xdotool type $pwd
 xte 'key Return'
 
+echo "waiting for user to login"
+while ! $(w | grep -q tmptr); do
+	sleep 1;
+done
+
+# executing install command
+if [ "$#" -ge "1" ]; then
+	sleep 1
+	DIR=$(pwd)
+	# DISPLAY=$DISPLAY xterm -e /bin/bash -l -c "cd $DIR; $@; sleep 60" &
+	CMD="$DIR/$@; /bin/sh"
+	echo $0: executing $CMD in xterm window
+	sudo -u tmptr DISPLAY=:1.0 xterm -e /bin/bash -c "$CMD"
+fi
+
 ###### maybe possible with xephyr?
 #### disp=4
 #### Xephyr -ac -screen 800x400 -br -reset -terminate 2> /dev/null :$disp & 
 #### sudo -u $user startx --  :$disp
 
 
-# wait until xephyr closed
+echo wait until session closed
 while ps -eo user,comm | grep $(whoami) | grep --quiet Xephyr; do
 	sleep 1
 done

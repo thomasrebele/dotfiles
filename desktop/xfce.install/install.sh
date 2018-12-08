@@ -1,6 +1,7 @@
 #!/bin/bash
 
-xfconf-query -c keyboard-layout -p /Default/XkbLayout -s de,us
-xfconf-query -c keyboard-layout -p /Default/XkbVariant -s neo,intl
+xfconf-query -c keyboard-layout -p /Default/XkbLayout -n -s de,us -t string
+xfconf-query -c keyboard-layout -p /Default/XkbVariant -n -s neo,intl -t string
+xfconf-query -c keyboard-layout -p /Default/XkbDisable -n -s false -t bool
 
 
