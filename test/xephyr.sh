@@ -28,7 +28,7 @@ fi
 
 # create nested session
 dm-tool add-nested-seat --screen 1000x800
-sleep 2
+sleep 1.5
 
 # search display
 # TODO: find DISPLAY dynamically?
@@ -37,13 +37,13 @@ DISPLAY=:1.0
 # login temporary user
 xdotool type tmptr
 xte 'key Tab'
-sleep 1
+sleep 0.1
 xdotool type $pwd
 xte 'key Return'
 
 echo "waiting for user to login"
 while ! $(w | grep -q tmptr); do
-	sleep 1;
+	sleep 0.1;
 done
 
 # executing install command

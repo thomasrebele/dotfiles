@@ -4,6 +4,8 @@
 link_repo="false"
 dotdir=$(realpath -s ~/.dotfiles2)
 
+export DOTFILES=$dotdir
+
 # command line arguments
 while :; do
 	echo "parse $1"
@@ -28,9 +30,9 @@ if [ ! -e $dotdir ]; then
 	cd ~/
 
 	# TODO: provide this from outside
-	export DOTFILES_REPO=/home/tr/.dotfiles2
+	export DOTFILES_ORIGIN=/home/tr/.dotfiles2
 	if [ "$link_repo" = "true" ]; then
-		ln -s $DOTFILES_REPO $dotdir
+		ln -s $DOTFILES_ORIGIN $dotdir
 	else
 		git clone http://github.com/thomasrebele/dotfiles
 		mv dotfiles $dotdir
