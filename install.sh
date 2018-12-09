@@ -48,8 +48,18 @@ install_category() (
 	echo "installing $1 into $2"
 	cd $1
 
+	files() {
+		/bin/ls -a -d -1 {.??,}*.symlink 
+		/bin/ls -a -d -1 {.??,}*.dir 
+		/bin/ls -a -d -1 install.sh 
+		/bin/ls -a -d -1 {.??,}*.install
+	}
 
-	for file in $(/bin/ls -a1); do
+	echo "list of actions"
+	files 2> /dev/null | awk '{print "   " $0}'
+
+	# symlinks
+	for file in $(files 2> /dev/null); do
 		case $file in
 
 			.);;
@@ -114,7 +124,6 @@ install_category() (
 				;;
 		esac
 	done
-
 )
 
 for category in $*
