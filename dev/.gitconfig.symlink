@@ -1,0 +1,41 @@
+[user]
+	name = Thomas Rebele
+	email = thomas.rebele@googlemail.com
+[core]
+	editor = vim
+[color]
+	ui = true
+#[diff]
+#	external = /home/tr/Programme/gitdiff.py
+[merge]
+	tool = gitvimmerge
+
+[mergetool "mymeld"]
+	cmd = $HOME/.dotfiles/scripts/gitmerge.sh $BASE $LOCAL $REMOTE $MERGED
+
+[mergetool "gitvimmerge"]
+	trustExitCode = true
+	keepBackup = false
+	cmd = gitvimmerge.sh vim $BASE $LOCAL $REMOTE $MERGED
+
+[gui]
+	editor = gvim
+	displayuntracked = true
+[cola]
+	fontdiff = DejaVu Sans Mono,9,-1,5,50,0,0,0,0,0
+	tabwidth = 4
+	spellcheck = false
+#[push]
+#	default = simple
+
+[alias]
+	pushall = !git remote | xargs -L1 git push --all
+[push]
+	default = matching
+[diff]
+	tool = meld
+[credential]
+	helper = cache --timeout=360000
+
+[format]
+	pretty = format:%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,blue)%>(22,trunc) %ci %C(auto,green)%<(15,trunc)%aN%C(auto,reset)%s%C(auto,red)% gD% D

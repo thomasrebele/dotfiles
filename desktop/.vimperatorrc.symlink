@@ -1,0 +1,9 @@
+"3.10.1 (created: 2015/08/25 00:41:59)
+
+set titlestring="firefox with vimperator"
+
+set passthrough
+
+source! /home/tr/.vimperatorrc.local
+
+" vim: set ft=vimperator:

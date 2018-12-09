@@ -1,0 +1,11 @@
+bind status a !?git commit --amend
+
+set wrap-lines = yes
+
+bind generic H !git difftool --tool=vimdiff --no-prompt --trust-exit-code %(commit)^!
+
+bind generic n previous
+bind generic r next
+bind generic <Up> move-up
+bind generic <Down> move-down
+
