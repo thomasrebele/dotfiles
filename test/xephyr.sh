@@ -28,7 +28,7 @@ fi
 
 # create nested session
 dm-tool add-nested-seat --screen 1000x800
-sleep 1.5
+sleep 2
 
 # search display
 # TODO: find DISPLAY dynamically?

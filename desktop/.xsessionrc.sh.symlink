@@ -1,0 +1,26 @@
+#!/bin/bash
+
+export XMODIFIERS=@im=ibus
+export GTK_IM_MODULE=ibus
+export GTK3_IM_MODULE=ibus
+export QT_IM_MODULE=ibus
+
+# automatic external monitor configuration
+if [ -f ~/.dotfiles/software/autorandr/autorandr.py ]; then
+	autorandr="$(realpath ~/.dotfiles/software/autorandr/autorandr.py) -c"
+	nohup ~/.dotfiles/software/srandrd/srandrd -v -n $autorandr &> /tmp/xsession-srandr.log &
+	$autorandr
+fi
+
+# set wallpaper
+if type "feh" > /dev/null; then
+	feh --bg-scale ~/projects/env/ergodox/neo-tr.png
+fi
+
+if type "xcompmgr" > /dev/null; then
+	xcompmgr -r 0 -o 1 -l 0 -t 0 &
+fi
+if type "devilspie" > /dev/null; then
+	devilspie -a &
+fi
+

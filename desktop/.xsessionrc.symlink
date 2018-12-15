@@ -1,0 +1,18 @@
+# xsessionrc is run under dash, shebang / exports does not work:
+# (prints the path of the current shell)
+sh -c 'ps -p $$ -o ppid=' | xargs -i readlink -f /proc/\{\}/exe
+
+
+# ibus
+# export XMODIFIERS, ... doesn't work within .xsessionrc???
+if [ -f ~/.xsessionrc.sh ]; then
+	~/.xsessionrc.sh
+fi
+
+# other environment variables
+if [ -f ~/.env-vars ]; then
+	. ~/.env-vars
+fi
+
+setxkbmap -layout de,us -variant neo,intl
+

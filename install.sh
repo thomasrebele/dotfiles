@@ -136,3 +136,5 @@ do
 	install_category $(realpath -s $category) ~
 done
 
+echo "$0 finished"
+
