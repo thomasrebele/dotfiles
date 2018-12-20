@@ -6,6 +6,8 @@ dotdir=$(realpath -s ~/.dotfiles2)
 
 export DOTFILES=$dotdir
 
+indent="   "
+
 # command line arguments
 while :; do
 	echo "parse $1"
@@ -45,104 +47,129 @@ cd $dotdir
 # import conditions
 . $(pwd)/conditions.sh
 
+
+handle_file() {
+	# usage: <original-filename> <installation-dir> <still-to-parse> <prefix>
+	file="$1"
+	install_dir="$2"
+	to_parse="$3"
+	prefix="$4$indent"
+
+	case $to_parse in
+
+		.);;
+		..);;
+
+		# execute install.sh
+		install.sh)
+			file=$(realpath -s ./install.sh)
+			if [ -f $file ]; then
+				echo "${prefix}${indent}executing $file"
+				. $file
+			else
+				echo "${prefix}${indent}install.sh must be a file"
+			fi
+			;;
+
+		# create symlink files
+		*.symlink) 
+			filename=${to_parse%".symlink"}
+			src=$(realpath -s $file)
+			dst=$(realpath -s $install_dir/$filename)
+			if [ ! -L $dst ]; then
+
+				# TODO: provide an option --force?
+				if [ -e $dst ]; then
+					rm -rf $dst
+				fi
+
+				echo "$prefix${indent}installing $filename ($dst -> $src)"
+				ln -s $src  $dst
+			fi
+			;;
+
+		# create dir files
+		*.dir) 
+			dirname=${to_parse%".dir"}
+			dst=$(realpath -s $install_dir/$dirname)
+
+			if [ ! -d $dst ]; then
+				echo "$prefix${indent}creating directory $dst"
+				mkdir $dst
+			fi
+
+			install_category $(realpath -s $file) $dst "$prefix"
+			;;
+
+
+		# install sub-categories
+		*.install)
+			file=$(realpath -s $file)
+			if [ -d "$file" ]; then
+				echo "install sub-category " $file
+				install_category $file $install_dir "$prefix"
+			else
+				echo "$file must be a directory"
+			fi
+			;;
+
+		*.on.*|*.if.*)
+			condition=$(echo "$file" | sed 's/.*\.if\./if\./' | sed 's/.*\.on\./on\./')
+			to_parse=${file%.$condition}
+
+			if check "$condition"; then
+				handle_file $file $install_dir $to_parse $prefix
+			else
+				echo "$prefix${indent}ignored because $condition not fulfilled"
+			fi
+			;;
+
+		*)
+			echo "${prefix}ignoring $file"
+			;;
+	esac
+}
+
+
+
 # function for installing a category
 install_category() (
-	echo ""
-	echo "installing $1 into $2"
-	cd $1
+	category=$1
+	install_dir=$2
+	prefix="$3$indent"
+	echo "${prefix}installing $category into $install_dir"
+	cd $category
+
+	search() {
+		find -maxdepth 1 -name "$@"
+	}
 
 	files() {
 		{ 
-			/bin/ls -a -d -1 {.??,}*.symlink 
-			/bin/ls -a -d -1 {.??,}*.dir
-			/bin/ls -a -d -1 install.sh 
-			/bin/ls -a -d -1 {.??,}*.install
+			search '*.symlink'
+			search '*.dir'
+			search install.sh 
+			search '*.install'
 
-			/bin/ls -a -d -1 * | grep -e "\.on\.\|\.if\."
-		} | awk '!seen[$0]++'
+			search '*' | grep -e "\.on\.\|\.if\."
+		} | sed 's:^./::' | awk '!seen[$0]++'
 	}
 
-	echo "list of actions"
-	files 2> /dev/null | awk '{print "   " $0}'
+	### print list of actions for debugging
+	# echo "${prefix}list of actions"
+	# files 2> /dev/null | awk "{print \"$prefix$indent\" \$0}"
+	# echo
 
 	# symlinks
 	for file in $(files 2> /dev/null); do
-		echo "FILE $file"
-		case $file in
-
-			.);;
-			..);;
-
-			# execute install.sh
-			install.sh)
-				file=$(realpath -s ./install.sh)
-				echo looking for $file
-				if [ -f $file ]; then
-					echo executing $file
-					. $file
-				else
-					echo "install.sh must be a file"
-				fi
-				;;
-
-			# create symlink files
-			*.symlink) 
-				filename=${file%".symlink"}
-				src=$(realpath -s $file)
-				dst=$(realpath -s $2/$filename)
-				if [ ! -L $dst ]; then
-
-					# TODO: provide an option --force?
-					if [ -e $dst ]; then
-						rm -rf $dst
-					fi
-
-					echo "installing $filename ($dst -> $src)"
-					ln -s $src  $dst
-				fi			
-				;;
-
-			# create dir files
-			*.dir) 
-				dirname=${file%".dir"}
-				dst=$(realpath -s $2/$dirname)
-
-				if [ ! -d $dst ]; then
-					echo "creating directory $dst"
-					mkdir $dst
-				fi
-
-				install_category $(realpath -s $file) $dst
-				;;
-
-
-			# install sub-categories
-			*.install)
-				file=$(realpath -s $file)
-				if [ -d "$file" ]; then
-					echo "install sub-category " $file
-					install_category $file $2
-				else
-					echo "$file must be a directory"
-				fi
-				;;
-
-			*.on.*|*.if.*)
-				condition=$(echo "$file" | sed 's/.*\.if\./if\./' | sed 's/.*\.on\./on\./')
-				echo
-				echo "    file $file, condition $condition"
-				echo
-				;;
-
-			*)
-				echo "ignoring $file"
-				;;
-		esac
+		echo "${prefix}* $file"
+		handle_file $file $install_dir $file $prefix
 	done
 )
 
 for category in $*
 do
+	echo ""
 	echo "--------------------------------------------------------------------------------"
 	echo applying $category configuration
 	echo "--------------------------------------------------------------------------------"
