@@ -138,6 +138,12 @@ install_category() (
 	local install_dir=$2
 	local prefix="$3$indent"
 	echo "${prefix}installing $category into $install_dir"
+
+	if [ ! -d $category ]; then
+		echo "${prefix}category $category not found in $(pwd)"
+		return
+	fi
+
 	cd $category
 
 	search() {
