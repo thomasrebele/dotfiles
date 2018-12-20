@@ -4,6 +4,10 @@ xfconf-query -c keyboard-layout -p /Default/XkbLayout -n -s de,us -t string
 xfconf-query -c keyboard-layout -p /Default/XkbVariant -n -s neo,intl -t string
 xfconf-query -c keyboard-layout -p /Default/XkbDisable -n -s false -t bool
 
+# fix problem of xfdesktop in combination with xmonad: xfdesktop appears on top of all other windows
+xfconf-query -c xfce4-session -p /sessions/Failsafe/Client4_Command -t string -t string -s xfdesktop -s -D
+
+
 # setup panel, need to shutdown running pannel and xfconfd
 # see https://askubuntu.com/a/224037
 
@@ -22,5 +26,4 @@ xfce4-panel &
 # update keyboard layout
 sleep 1
 xfce4-panel --restart
-
 
