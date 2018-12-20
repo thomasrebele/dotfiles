@@ -51,7 +51,7 @@ if [ "$#" -ge "1" ]; then
 	sleep 1
 	DIR=$(pwd)
 	# DISPLAY=$DISPLAY xterm -e /bin/bash -l -c "cd $DIR; $@; sleep 60" &
-	CMD="$DIR/$@; /bin/sh"
+	CMD="$DIR/$@; /bin/bash"
 	echo $0: executing $CMD in xterm window
 	sudo -u tmptr DISPLAY=:1.0 xterm -e /bin/bash -c "$CMD"
 fi
