@@ -1,10 +1,16 @@
 #!/bin/bash
 
-use_shell=/bin/zsh
+ZSH=/bin/zsh
+BASH=/bin/bash
 
-if [ "$SHELL" != "$use_shell" ]; then
-	echo changing shell to zsh
-	chsh -s "$use_shell"
+if [ "$SHELL" != "$ZSH" ]; then
+	if [ -h ~/.zshrc ]; then
+		echo changing shell to zsh
+		chsh -s "$ZSH"
+	else
+		echo "~/.zshrc not found, changing shell to bash"
+		chsh -s "$BASH"
+	fi
 fi
 
 
