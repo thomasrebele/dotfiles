@@ -52,10 +52,14 @@ install_category() (
 	cd $1
 
 	files() {
-		/bin/ls -a -d -1 {.??,}*.symlink 
-		/bin/ls -a -d -1 {.??,}*.dir 
-		/bin/ls -a -d -1 install.sh 
-		/bin/ls -a -d -1 {.??,}*.install
+		{ 
+			/bin/ls -a -d -1 {.??,}*.symlink 
+			/bin/ls -a -d -1 {.??,}*.dir
+			/bin/ls -a -d -1 install.sh 
+			/bin/ls -a -d -1 {.??,}*.install
+
+			/bin/ls -a -d -1 * | grep -e "\.on\.\|\.if\."
+		} | awk '!seen[$0]++'
 	}
 
 	echo "list of actions"
@@ -63,6 +67,7 @@ install_category() (
 
 	# symlinks
 	for file in $(files 2> /dev/null); do
+		echo "FILE $file"
 		case $file in
 
 			.);;
@@ -120,6 +125,13 @@ install_category() (
 				else
 					echo "$file must be a directory"
 				fi
+				;;
+
+			*.on.*|*.if.*)
+				condition=$(echo "$file" | sed 's/.*\.if\./if\./' | sed 's/.*\.on\./on\./')
+				echo
+				echo "    file $file, condition $condition"
+				echo
 				;;
 
 			*)
