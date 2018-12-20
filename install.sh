@@ -42,6 +42,9 @@ fi
 # dotfile repository created, now we can go into it
 cd $dotdir
 
+# import conditions
+. $(pwd)/conditions.sh
+
 # function for installing a category
 install_category() (
 	echo ""
