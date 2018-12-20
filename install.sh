@@ -50,10 +50,10 @@ cd $dotdir
 
 handle_file() {
 	# usage: <original-filename> <installation-dir> <still-to-parse> <prefix>
-	file="$1"
-	install_dir="$2"
-	to_parse="$3"
-	prefix="$4$indent"
+	local file="$1"
+	local install_dir="$2"
+	local to_parse="$3"
+	local prefix="$4$indent"
 
 	case $to_parse in
 
@@ -62,7 +62,7 @@ handle_file() {
 
 		# execute install.sh
 		install.sh)
-			file=$(realpath -s ./install.sh)
+			local file=$(realpath -s ./install.sh)
 			if [ -f $file ]; then
 				echo "${prefix}${indent}executing $file"
 				. $file
@@ -73,9 +73,9 @@ handle_file() {
 
 		# create symlink files
 		*.symlink) 
-			filename=${to_parse%".symlink"}
-			src=$(realpath -s $file)
-			dst=$(realpath -s $install_dir/$filename)
+			local filename=${to_parse%".symlink"}
+			local src=$(realpath -s $file)
+			local dst=$(realpath -s $install_dir/$filename)
 			if [ ! -L $dst ]; then
 
 				# TODO: provide an option --force?
@@ -90,8 +90,8 @@ handle_file() {
 
 		# create dir files
 		*.dir) 
-			dirname=${to_parse%".dir"}
-			dst=$(realpath -s $install_dir/$dirname)
+			local dirname=${to_parse%".dir"}
+			local dst=$(realpath -s $install_dir/$dirname)
 
 			if [ ! -d $dst ]; then
 				echo "$prefix${indent}creating directory $dst"
@@ -104,7 +104,7 @@ handle_file() {
 
 		# install sub-categories
 		*.install)
-			file=$(realpath -s $file)
+			local file=$(realpath -s $file)
 			if [ -d "$file" ]; then
 				echo "install sub-category " $file
 				install_category $file $install_dir "$prefix"
@@ -114,8 +114,8 @@ handle_file() {
 			;;
 
 		*.on.*|*.if.*)
-			condition=$(echo "$file" | sed 's/.*\.if\./if\./' | sed 's/.*\.on\./on\./')
-			to_parse=${file%.$condition}
+			local condition=$(echo "$file" | sed 's/.*\.if\./if\./' | sed 's/.*\.on\./on\./')
+			local to_parse=${file%.$condition}
 
 			if check "$condition"; then
 				handle_file $file $install_dir $to_parse $prefix
@@ -134,9 +134,9 @@ handle_file() {
 
 # function for installing a category
 install_category() (
-	category=$1
-	install_dir=$2
-	prefix="$3$indent"
+	local category=$1
+	local install_dir=$2
+	local prefix="$3$indent"
 	echo "${prefix}installing $category into $install_dir"
 	cd $category
 

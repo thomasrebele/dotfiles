@@ -11,7 +11,7 @@ check() {
 
 	case "$1" in 
 		if.*)
-			check=${1#if.}
+			local check=${1#if.}
 
 			# parse if condition
 			case "$check" in
@@ -19,7 +19,7 @@ check() {
 				false) false;;
 
 				host=*)
-					hostname=${check#host=}
+					local hostname=${check#host=}
 					check_host $hostname
 					;;
 
@@ -33,7 +33,7 @@ check() {
 			;;
 
 		on.*)
-			hostname=${1#on.}
+			local hostname=${1#on.}
 			check_host $hostname
 			return
 			;;
@@ -50,17 +50,17 @@ check() {
 #   <expected-command>: a command that exists with the expected code
 #   <test-command>: this command should be tested
 assert() {
-	expected=$1
+	local expected=$1
 	$expected
-	expected_result=$?
+	local expected_result=$?
 	shift
 
 	# execute command
 	$@ 
-	result=$?
+	local result=$?
 
 	shift
-	args="$@"
+	local args="$@"
 	printf "checking %-40s    " "$args"
 	printf 'expected: <%s> ' "$expected_result"
 	printf 'returned <%s>' "$result"
