@@ -1,7 +1,7 @@
 #!/bin/bash
 
 check_host() {
-	[ "$1" == "$(hostname)" ]
+	[ "$1" = "$(hostname)" ]
 }
 
 check() {
@@ -9,12 +9,12 @@ check() {
 	# where check is
 	# - if.<check-command>-<paramaters>
 
-	case $1 in 
+	case "$1" in 
 		if.*)
 			check=${1#if.}
 
 			# parse if condition
-			case $check in
+			case "$check" in
 				true) true;;
 				false) false;;
 
@@ -24,7 +24,7 @@ check() {
 					;;
 
 				*)
-					echo "unknown command: $cmd"
+					echo "WARNING: unknown condition: $1" > /dev/stderr
 					false
 					;;
 
@@ -103,3 +103,4 @@ done
 
 
 
+check on.$(hostname)
