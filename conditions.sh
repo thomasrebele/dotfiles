@@ -4,6 +4,10 @@ check_host() {
 	[ "$1" = "$(hostname)" ]
 }
 
+check_package() {
+	dpkg -s $1 2>&1 > /dev/null
+}
+
 check() {
 	# usage: <check>
 	# where check is
@@ -20,7 +24,12 @@ check() {
 
 				host=*)
 					local hostname=${check#host=}
-					check_host $hostname
+					check_host "$hostname"
+					;;
+
+				package-*)
+					local package=${check#package-}
+					check_package "$package"
 					;;
 
 				*)
@@ -51,7 +60,7 @@ check() {
 #   <test-command>: this command should be tested
 assert() {
 	local expected=$1
-	$expected
+	$expected 2>&1 > /dev/null
 	local expected_result=$?
 	shift
 
@@ -82,6 +91,9 @@ unit_tests() {
 	assert false check if.host=X$(hostname)
 	assert true  check on.$(hostname)
 	assert false check on.X$(hostname)
+
+	# package command
+	assert "dpkg -s workrave" check if.package-workrave
 }
 
 
