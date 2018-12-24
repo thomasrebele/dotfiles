@@ -1,0 +1,20 @@
+#!/bin/bash
+
+dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+file=$(realpath "$1")
+
+if [[ "$file" == *"zotero"* ]];
+then
+	chmod u+w "$file"
+fi
+
+
+prog=$(winepath -w ~/.wine/drive_c/Program\ Files\ \(x86\)/Tracker\ Software/PDFXEdit/PDFXEdit.exe)
+param=$(winepath -w "$*")
+
+echo "$dir" > /tmp/test.txt
+wine "$prog" "$param" > /tmp/test.txt
+
+echo $file
+#exit 0

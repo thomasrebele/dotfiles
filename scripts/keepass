@@ -1,0 +1,5 @@
+#!/bin/bash
+
+kp=$(realpath ~/software/keepass/)
+
+mono $kp/default/KeePass.exe $kp/db/keepass.kdbx -preselect:$kp/db/keepass.key >/tmp/keepass.log 2>&1 &

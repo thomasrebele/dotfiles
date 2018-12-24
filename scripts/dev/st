@@ -1,0 +1,15 @@
+#!/bin/bash
+# requires "unbuffer" script from "expect" package
+
+cmd1='git status -sb'
+cmd2='sed "s/^/\t/"'
+
+cmd_exists() {
+	hash $1 2>/dev/null
+}
+
+if cmd_exists socat; then
+	eval "socat EXEC:'$cmd1',pty STDOUT | $cmd2"
+elif cmd_exists unbuffer; then 
+	eval "unbuffer $cmd1 | $cmd2"
+fi

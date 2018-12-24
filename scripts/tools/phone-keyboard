@@ -1,0 +1,3 @@
+#!/bin/bash
+
+adb forward tcp:2323 tcp:2323; telnet localhost 2323
