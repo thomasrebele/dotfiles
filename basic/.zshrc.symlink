@@ -107,8 +107,8 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-if [ -f ~/.dotfiles/.aliases ]; then
-    . ~/.dotfiles/.aliases
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
 fi
 
 alias -s pdf="detach evince"
