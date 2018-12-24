@@ -113,8 +113,8 @@ fi
 
 alias -s pdf="detach evince"
 
-if [ -f ~/.dotfiles/software/z/z.sh ]; then
-	source ~/.dotfiles/software/z/z.sh
+if [ -f ~/software/z/z.sh ]; then
+	source ~/software/z/z.sh
 fi
 if [ -d ~/.dotfiles/software/zsh-git-prompt ]; then
 	source ~/.dotfiles/software/zsh-git-prompt/zshrc.sh

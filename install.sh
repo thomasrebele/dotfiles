@@ -36,7 +36,7 @@ if [ ! -e $dotdir ]; then
 	if [ "$link_repo" = "true" ]; then
 		ln -s $DOTFILES_ORIGIN $dotdir
 	else
-		git clone http://github.com/thomasrebele/dotfiles
+		git clone git://github.com/thomasrebele/dotfiles
 		mv dotfiles $dotdir
 	fi
 fi
