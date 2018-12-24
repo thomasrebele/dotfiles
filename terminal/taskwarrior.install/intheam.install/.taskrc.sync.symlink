@@ -1,0 +1,4 @@
+taskd.certificate=~/.task/sync-inthe.am/inthe.am_private.certificate.pem
+taskd.key=~/.task/sync-inthe.am/inthe.am_private.key.pem
+taskd.server=taskwarrior.inthe.am:53589
+taskd.credentials=inthe_am/thomas.rebele/95dca546-ea7a-4754-9323-c6e34873d0a3
