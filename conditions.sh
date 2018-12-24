@@ -60,12 +60,12 @@ check() {
 #   <test-command>: this command should be tested
 assert() {
 	local expected=$1
-	$expected 2>&1 > /dev/null
+	$expected > /dev/null 2>&1
 	local expected_result=$?
 	shift
 
 	# execute command
-	$@ 
+	$@ > /dev/null 2>&1
 	local result=$?
 
 	shift
@@ -93,7 +93,8 @@ unit_tests() {
 	assert false check on.X$(hostname)
 
 	# package command
-	assert "dpkg -s workrave" check if.package-workrave
+	assert "dpkg -s apt" check if.package-apt
+	assert "dpkg -s NOTINSTALLED" check if.package-NOTINSTALLED
 }
 
 
