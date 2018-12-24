@@ -1,0 +1,48 @@
+
+set noexpandtab
+
+let mapleader = ","
+
+
+eclipseaction eclipsegotodef org.eclipse.jdt.ui.edit.text.java.open.editor
+nnoremap la :eclipsegotodef<cr>
+
+
+" adaptions for NEO keyboard layout
+" (RSI prevention)
+" use s instead of : (avoid strain on little finger)
+noremap : <Nop>
+noremap s :
+noremap j <Nop>
+noremap J <Nop>
+" noremap y <Nop>
+" noremap u <Nop>
+" noremap d <Nop>
+
+noremap l g
+noremap ll gg
+noremap L G
+noremap <C-l> L
+noremap n k
+noremap r j
+noremap g l
+
+noremap <leader>ec y
+noremap ä r
+noremap Ä R
+
+noremap k n
+
+
+
+noremap <leader>eo J
+nnoremap <leader>ea d
+nnoremap <leader>eaa dd
+noremap <leader>eA D
+vnoremap <leader>ea d
+
+noremap <leader>eb u
+noremap <leader>er <C-r>
+noremap <leader>ec y
+noremap <leader>ecc yy
+
