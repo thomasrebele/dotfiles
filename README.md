@@ -34,7 +34,7 @@ The name of directories and files ("action") determine their purpose:
 
 Several scripts provide a way to simulate a new session. This allows to test the installation of the configuration files.
 
-* `test/su.sh': Starts a terminal session with the `su` command as a temporary user.
+* `test/su.sh`: Starts a terminal session with the `su` command as a temporary user.
 * `test/xephyr.sh`: Starts a nested X session using the `dm-tool`, and logging in as a temporary user.
 
 
