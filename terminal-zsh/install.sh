@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ ! -e ~/.oh-my-zsh ]; then
-	github ~/ robbyrussell/oh-my-zsh
+if [ ! -e ~/software/oh-my-zsh ]; then
+	github ~/software/ robbyrussell/oh-my-zsh
 fi
 
 
