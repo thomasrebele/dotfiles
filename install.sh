@@ -27,6 +27,18 @@ done
 
 echo "setting up dotfiles for user $(whoami) at $dotdir"
 
+# clone repo from github
+github() {
+	local dir="$1"
+	local repo="$2"
+	local dest="$dir/${repo##*/}"
+	if [ ! -e "$dest" ]; then
+		git -C "$dir" clone --depth 1 "git://github.com/$repo"
+	else
+		echo "repository github.com/$repo exists in $dir"
+	fi
+}
+
 # clone dotfile repository
 if [ ! -e $dotdir ]; then
 	cd ~/
@@ -36,7 +48,7 @@ if [ ! -e $dotdir ]; then
 	if [ "$link_repo" = "true" ]; then
 		ln -s $DOTFILES_ORIGIN $dotdir
 	else
-		git clone git://github.com/thomasrebele/dotfiles
+		github ~ thomasrebele/dotfiles
 		mv dotfiles $dotdir
 	fi
 fi
@@ -172,6 +184,7 @@ install_category() (
 		handle_file $file $install_dir $file $prefix
 	done
 )
+
 
 for category in $*
 do

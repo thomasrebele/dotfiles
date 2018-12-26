@@ -2,9 +2,10 @@
 
 
 # install z
-mkdir -p ~/software/z
-git -C ~/software/ clone git://github.com/rupa/z
-touch ~/.z
+if [ ! -e ~/software/z  ]; then
+	github ~/software/ rupa/z
+	touch ~/.z
+fi
 
 # set shell
 ZSH=/bin/zsh
