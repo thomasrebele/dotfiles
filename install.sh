@@ -2,7 +2,7 @@
 
 # default options
 link_repo="false"
-dotdir=$(realpath -s ~/.dotfiles2)
+dotdir=$(realpath -s ~/.dotfiles)
 
 export DOTFILES=$dotdir
 
@@ -44,7 +44,7 @@ if [ ! -e $dotdir ]; then
 	cd ~/
 
 	# TODO: provide this from outside
-	export DOTFILES_ORIGIN=/home/tr/.dotfiles2
+	export DOTFILES_ORIGIN=/home/tr/.dotfiles
 	if [ "$link_repo" = "true" ]; then
 		ln -s $DOTFILES_ORIGIN $dotdir
 	else

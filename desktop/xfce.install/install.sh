@@ -18,7 +18,7 @@ pkill xfconfd
 
 # TODO: use variable instead of hard-coded constant
 
-SRC=~/.dotfiles2/desktop/xfce.install/.config.dir/xfce4.dir/xfconf.dir/xfce-perchannel-xml.dir/xfce4-panel.xml
+SRC=~/.dotfiles/desktop/xfce.install/.config.dir/xfce4.dir/xfconf.dir/xfce-perchannel-xml.dir/xfce4-panel.xml
 cp $SRC ~/.config/xfce4/xfconf/xfce-perchannel-xml
 
 xfce4-panel &
