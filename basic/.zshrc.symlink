@@ -140,7 +140,7 @@ PROMPT+='%f' # end foreground color
 
 if [ -d ~/software/zsh-git-prompt ]; then
 	source ~/software/zsh-git-prompt/zshrc.sh
-	RPROMPT+='$(git_super_status)'
+	PROMPT+='$(git_super_status)'
 fi
 
 PROMPT+='%(!.#.$) ' # prompt character
