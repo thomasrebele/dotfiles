@@ -1,4 +1,4 @@
 #!/bin/bash
 
-task sync init
+# task sync init
 
