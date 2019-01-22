@@ -20,7 +20,13 @@ fi
 if type "xcompmgr" > /dev/null; then
 	xcompmgr -r 0 -o 1 -l 0 -t 0 &
 fi
-if type "devilspie" > /dev/null; then
-	devilspie -a &
+
+if type "devilspie2" > /dev/null; then
+	if [ -d ~/.config/devilspie2 ]; then
+	(
+		cd ~/.config/devilspie2
+		devilspie2 -d > /tmp/devilspie2.log &
+	)
+	fi
 fi
 

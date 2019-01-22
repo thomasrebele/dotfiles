@@ -1,0 +1,15 @@
+
+
+require "common"
+
+
+
+-- debug()
+
+if (win_class() == "Eclipse") then
+	win_count = win_count()
+	debug_print("window_count: " .. win_count)
+	if (win_count == "1") then
+		workspace(1)
+	end
+end

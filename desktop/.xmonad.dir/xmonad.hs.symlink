@@ -76,7 +76,6 @@ myManageHook = composeAll [
 		className =? "Firefox" --> doShift "3",
 		className =? "Thunderbird" --> doShift "9",
 		className =? "KeePass2" --> doShift "8",
-		className =? "Eclipse" --> doShift "1",
 		className =? "Java" --> doShift "1" -- eclipse spash screen
 	]
 

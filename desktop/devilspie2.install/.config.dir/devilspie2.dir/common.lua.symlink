@@ -1,0 +1,47 @@
+--------------------------------------------------------------------------------
+-- function definitions
+--------------------------------------------------------------------------------
+--
+function xid () 
+	return get_window_xid()
+end
+
+
+function exec (cmd)
+	local f = assert(io.popen(cmd, "r"))
+	local output = f:read('*all')
+	return output:sub(1, -2) -- remove last character
+end
+
+function pid ()
+	local xid = get_window_xid()
+	return exec("xdotool getwindowpid " .. xid)
+end
+
+function win_count() 
+	cmd="wmctrl -l -p -x | awk '{print $3}' | grep '" .. pid() .. "' | wc -l"
+	return exec(cmd)
+end
+
+
+app_name = get_application_name
+win_name = get_window_name
+win_class = get_window_class
+class_inst_name = get_class_instance_name
+workspace = set_window_workspace
+
+
+function debug()
+	debug_print()
+	debug_print("---")
+
+	debug_print("application: " .. app_name())
+	debug_print("pid: " .. pid())
+	debug_print("window count: " .. win_count())
+	debug_print("window class: " .. win_class())
+	debug_print("class instance: " .. class_inst_name())
+	debug_print("window: " .. win_name())
+	debug_print("window xid: " .. xid())
+	debug_print("window class: " .. win_class())
+end
+
