@@ -1,0 +1,12 @@
+
+require "common"
+
+win_class = win_class()
+win_name = win_name()
+
+if ((win_class == "workrave" or win_class == "Workrave") and (win_name == "workrave" or win_name == "Workrave")) then
+	exec("transset -i " .. win_xid() .. " 0.5")
+	exec("xdotool windowmove " .. win_xid() .. " 1840 700")
+end
+
+

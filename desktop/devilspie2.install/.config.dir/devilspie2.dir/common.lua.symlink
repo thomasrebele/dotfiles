@@ -2,9 +2,6 @@
 -- function definitions
 --------------------------------------------------------------------------------
 --
-function xid () 
-	return get_window_xid()
-end
 
 
 function exec (cmd)
@@ -23,7 +20,8 @@ function win_count()
 	return exec(cmd)
 end
 
-
+xid = get_window_xid
+win_xid = get_window_xid
 app_name = get_application_name
 win_name = get_window_name
 win_class = get_window_class
@@ -40,7 +38,7 @@ function debug()
 	debug_print("window count: " .. win_count())
 	debug_print("window class: " .. win_class())
 	debug_print("class instance: " .. class_inst_name())
-	debug_print("window: " .. win_name())
+	debug_print("window name: " .. win_name())
 	debug_print("window xid: " .. xid())
 	debug_print("window class: " .. win_class())
 end

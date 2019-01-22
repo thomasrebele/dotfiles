@@ -1,9 +1,0 @@
-( if
-( and
-	(or ( contains ( window_class ) "workrave" ) ( contains ( window_class ) "Workrave" ) )
-	(or ( contains ( window_name ) "workrave" ) ( contains ( window_name ) "Workrave" ) )
-)
-( begin
-( spawn_async (str "transset -i " (window_xid) " 0.5" ))
-)
-)
