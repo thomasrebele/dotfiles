@@ -17,6 +17,13 @@ while :; do
 			skipped="true"
 			defaults="false"
 			;;
+		--incomplete)
+			incomplete="true"
+			defaults="false"
+			;;
+		--with-incomplete)
+			incomplete="true"
+			;;
 		-?*)
 			printf "Unknown option: %s\n" "$1" >&2
 			exit
@@ -33,8 +40,11 @@ if [ "$defaults" == "true" ]; then
 	failures="true";
 	errors="true";
 	skipped="false";
+	if [ -z ${incomplete+x} ]; then
+		incomplete="false";
+	fi
 fi
-echo "// settings: failures=$failures, errors=$errors, skipped=$skipped" > /dev/stderr
+echo "// settings: failures=$failures, errors=$errors, skipped=$skipped, incomplete=$incomplete" > /dev/stderr
 echo "// --------------------------------------------------------------------------------"
 
 filter_failures() {
@@ -56,6 +66,7 @@ EOF
 	if [ "$failures" == "true" ]; then echo "not(descendant-or-self::failure) and "; fi
 	if [ "$errors" == "true" ]; then echo "not(descendant-or-self::error) and "; fi
 	if [ "$skipped" == "true" ]; then echo "not(descendant-or-self::skipped) and "; fi
+	if [ "$incomplete" == "true" ]; then echo "not(.//@incomplete) and "; fi
 cat <<EOF
 			true()]"/>
 	</xsl:stylesheet>
@@ -121,7 +132,7 @@ echo -n "	"
 join_by ', //
 	' $(classes "$1")
 
-echo " //"
+echo ", //"
 cat <<EOF
 })
 public class FilteredTests

@@ -7,7 +7,9 @@
 function exec (cmd)
 	local f = assert(io.popen(cmd, "r"))
 	local output = f:read('*all')
-	return output:sub(1, -2) -- remove last character
+	output = output:sub(1, -2) -- remove last character
+	debug_print("executing '" .. cmd .. "', output '" .. output .. "'")
+	return output
 end
 
 function pid ()
@@ -28,6 +30,9 @@ win_class = get_window_class
 class_inst_name = get_class_instance_name
 workspace = set_window_workspace
 
+function debug_windows()
+	debug_print(exec("wmctrl -l -p -x"))
+end
 
 function debug()
 	debug_print()
@@ -43,3 +48,4 @@ function debug()
 	debug_print("window class: " .. win_class())
 end
 
+debug()
