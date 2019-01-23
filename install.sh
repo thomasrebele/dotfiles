@@ -88,13 +88,19 @@ handle_file() {
 			local filename=${to_parse%".symlink"}
 			local src=$(realpath -s $file)
 			local dst=$(realpath -s $install_dir/$filename)
-			if [ ! -L $dst ]; then
 
+
+			if [ -L $dst ]; then
 				# TODO: provide an option --force?
-				if [ -e $dst ]; then
+				# TODO: check destination
+				if [ ! -e $dst ]; then
+					# link is broken, so it's safe to remove
 					rm -rf $dst
 				fi
+			fi
 
+
+			if [ ! -e $dst ]; then
 				echo "$prefix${indent}installing $filename ($dst -> $src)"
 				ln -s $src  $dst
 			fi
