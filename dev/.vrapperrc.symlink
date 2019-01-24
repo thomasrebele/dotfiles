@@ -3,9 +3,13 @@ set noexpandtab
 
 let mapleader = ","
 
+nnoremap ld <Plug>(eclipse-motion:org.eclipse.jdt.ui.edit.text.java.open.editor)
 
-eclipseaction eclipsegotodef org.eclipse.jdt.ui.edit.text.java.open.editor
-nnoremap la :eclipsegotodef<cr>
+eclipseuiaction goto_impl org.eclipse.jdt.ui.edit.text.java.open.implementation
+nnoremap li :goto_impl<cr>
+
+eclipseuiaction goto_super_impl org.eclipse.jdt.ui.edit.text.java.open.super.implementation
+nnoremap ls :goto_super_impl<cr>
 
 
 " adaptions for NEO keyboard layout
@@ -14,26 +18,38 @@ nnoremap la :eclipsegotodef<cr>
 noremap : <Nop>
 noremap s :
 noremap j <Nop>
-noremap J <Nop>
-" noremap y <Nop>
-" noremap u <Nop>
-" noremap d <Nop>
 
 noremap l g
 noremap ll gg
 noremap L G
 noremap <C-l> L
+
+
+noremap lU gU
+noremap lu gu
+
+" Treat long lines as break lines (useful when moving around in them)
 noremap n k
 noremap r j
 noremap g l
 
 noremap <leader>ec y
+
+
+noremap k n
+noremap K N
+
+noremap <C-c> y
 noremap ä r
 noremap Ä R
 
-noremap k n
 
+set ignorecase
+set smartcase
+set hlsearch
+set cursorline
 
+vnoremap * /\<<C-r>*\><RETURN><ESC>n
 
 noremap <leader>eo J
 nnoremap <leader>ea d
@@ -45,4 +61,6 @@ noremap <leader>eb u
 noremap <leader>er <C-r>
 noremap <leader>ec y
 noremap <leader>ecc yy
+
+let @t=a<SPACE>//<SPACE>TODO<SPACE>tre<SPACE>
 

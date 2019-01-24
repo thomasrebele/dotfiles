@@ -1,0 +1,10 @@
+
+
+require "common"
+
+-- debug()
+
+if string.find(win_class(), "vit") or string.find(win_name(), "vit") then
+	debug_windows()
+	workspace(9)
+end
