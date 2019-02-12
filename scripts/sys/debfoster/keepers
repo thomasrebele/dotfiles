@@ -1,0 +1,33 @@
+
+vim-gtk
+meld
+
+# audo & video
+vlc
+vlc-plugin-pulse
+ffmpeg
+
+
+# user input methods
+ibus-anthy
+ibus-input-pad
+ibus-m17n
+ibus-pinyin
+ibus-qt4
+ibus-sunpinyin
+
+# console tools
+debfoster
+deborphan
+gawk
+gpgv2
+locate
+lshw
+socat
+
+# system
+linux-image-amd64
+gparted
+grub-pc
+libpam-ssh
+manpages
