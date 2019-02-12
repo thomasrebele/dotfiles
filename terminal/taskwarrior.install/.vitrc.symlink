@@ -1,0 +1,30 @@
+
+map <F3>=:!w task sync<Return>
+map <F4>=:!w task sync<Return><F5>
+map <F5>=:q<Return>
+
+map Q=:!w echo "quit with F5"
+map q=:!w echo "quit with F5"
+
+map s=:
+map h=d
+map H=D
+
+map n=k
+map r=j
+
+map 1=:ready<Return>
+map 2=:blocking<Return>
+map 3=:waiting<Return>
+map 4=:active<Return>
+
+map 5=:minimal<Return>
+map 6=:ls<Return>
+map 7=:list<Return>
+map 8=:long<Return>
+ 
+map 9=:next<Return>
+map 0=:ready<Return>
+ 
+
+
