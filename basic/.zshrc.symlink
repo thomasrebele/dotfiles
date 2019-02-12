@@ -130,10 +130,11 @@ PROMPT+='%F{$NCOLOR}' # start foreground color
 PROMPT+='%n@%m ' # user@host
 PROMPT+='%*:' # time (hh:mm:ss)
 PROMPT+='%B' # begin bold
-if [ -e '~/short.pwd.py' ]; then
-	
+if [ -e ~/.dotfiles/scripts/short-pwd.py ]; then
+	# shortened working directory
+	PROMPT+='$(python ~/.dotfiles/scripts/short-pwd.py)'
 else
-	PROMPT+='%~' # begin bold
+	PROMPT+='%~' 
 fi
 PROMPT+='%b' # end bold
 PROMPT+='%f' # end foreground color
