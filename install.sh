@@ -83,6 +83,19 @@ handle_file() {
 			fi
 			;;
 
+		*.copy)
+			local filename=${to_parse%".copy"}
+			local src=$(realpath -s $file)
+			local dst=$(realpath -s $install_dir/$filename)
+			
+			if [ ! -e "$dst" ]; then
+				echo "$prefix${indent}copying $src to $dst"
+				cp $src $dst
+			else
+				echo "$prefix${indent}skipping copy because destination already exists: $dst"
+			fi
+			;;
+
 		# create symlink files
 		*.symlink) 
 			local filename=${to_parse%".symlink"}
@@ -171,6 +184,7 @@ install_category() (
 	files() {
 		{ 
 			search '*.symlink'
+			search '*.copy'
 			search '*.dir'
 			search install.sh 
 			search '*.install'

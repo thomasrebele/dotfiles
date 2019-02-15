@@ -61,8 +61,9 @@ fi
 #### Xephyr -ac -screen 800x400 -br -reset -terminate 2> /dev/null :$disp & 
 #### sudo -u $user startx --  :$disp
 
-
+echo 
 echo wait until session closed
+echo 
 while ps -eo user,comm | grep $(whoami) | grep --quiet Xephyr; do
 	sleep 1
 done
