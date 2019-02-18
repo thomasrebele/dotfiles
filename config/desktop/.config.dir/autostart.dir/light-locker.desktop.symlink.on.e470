@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+_Name=Screen Locker
+_Comment=Launch screen locker program
+Icon=preferences-desktop-screensaver
+Exec=light-locker --lock-on-suspend
+NoDisplay=true
+NotShowIn=GNOME;Unity;
+Hidden=false
+
