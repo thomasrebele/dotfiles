@@ -1,3 +1,7 @@
 #!/bin/bash
 
-zgrep "Error getting user list from org.freedesktop.Accounts" $(/bin/ls /var/log/syslog* | sort -r) | sed 's/^[^:]*://' | sed 's/lightdm.*//'
+
+zgrep -e "Error getting user list from org.freedesktop.Accounts" \
+	-e "Stopped target Graphical Interface" \
+	-e "Reached target \(Graphical Interface\|Shutdown\)" \
+	$(/bin/ls /var/log/syslog* | sort -r) | sed 's/^[^:]*://' | sed 's/lightdm.*//'

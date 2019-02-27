@@ -117,11 +117,11 @@ function join_by {
 }
 
 output_classes() {
-	grep "<testcase" | grep 'classname="' | sed 's/.* classname="\([^"]*\)".*/\1.class/' | sort -u
+	grep "<testcase" | grep 'classname="' | sed 's/.* classname="\([^"]*\)".*/\1.class/' | awk '!seen[$0]++'
 }
 
 output_methods() {
-	grep "<testcase" | grep 'classname="' | sed 's/.* name="\([^"]*\)".* classname="\([^"]*\)"\( time="\([^"]*\)"\)\?.*/\2.class\t\1\t\4/' | sort -u
+	grep "<testcase" | grep 'classname="' | sed 's/.* name="\([^"]*\)".* classname="\([^"]*\)"\( time="\([^"]*\)"\)\?.*/\2.class\t\1\t\4/' | awk '!seen[$0]++'
 }
 
 
@@ -194,10 +194,10 @@ public class FilteredTests
 
 	public static class MethodFilter extends Suite
 	{
-		private static Map<Class<?>, List<String>> map;
+		private static Map<Class<?>, List<String>> map = new HashMap<>();
+		private static List<Class<?>> classes = new ArrayList<>();
 
-		private static Map<Class<?>, List<String>> getClasses(Class<?> klass)
-			throws InitializationError
+		private static List<Class<?>> getClasses(Class<?> klass) throws InitializationError
 		{
 			SuiteMethods annotation = klass.getAnnotation(SuiteMethods.class);
 			if (annotation == null)
@@ -206,17 +206,20 @@ public class FilteredTests
 					"class '%s' must have a Method or SuiteMethods annotation",
 					klass.getName()));
 			}
-			Map<Class<?>, List<String>> result = new HashMap<>();
 			for (Method m : annotation.value())
 			{
-				result.computeIfAbsent(m.klass(), k -> new ArrayList<>()).add(m.method());
+				if (classes.isEmpty() || classes.get(classes.size() - 1) != m.klass())
+				{
+					classes.add(m.klass());
+				}
+				map.computeIfAbsent(m.klass(), k -> new ArrayList<>()).add(m.method());
 			}
-			return result;
+			return classes;
 		}
 
 		public MethodFilter(Class<?> klass, RunnerBuilder builder) throws Exception
 		{
-			super(klass, builder.runners(null, new ArrayList<>((map = getClasses(klass)).keySet())));
+			super(klass, builder.runners(null, getClasses(klass)));
 			Filter f = new Filter()
 			{
 				@Override
