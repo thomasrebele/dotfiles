@@ -194,7 +194,8 @@ public class FilteredTests
 
 	public static class MethodFilter extends Suite
 	{
-		private static Map<Class<?>, List<String>> map = new HashMap<>();
+
+		private static List<List<String>> methodGroups = new ArrayList<>();
 		private static List<Class<?>> classes = new ArrayList<>();
 
 		private static List<Class<?>> getClasses(Class<?> klass) throws InitializationError
@@ -208,11 +209,15 @@ public class FilteredTests
 			}
 			for (Method m : annotation.value())
 			{
-				if (classes.isEmpty() || classes.get(classes.size() - 1) != m.klass())
+				// group method calls if possible
+				if (classes.isEmpty()
+					|| classes.get(classes.size() - 1) != m.klass()
+					|| methodGroups.get(classes.size() - 1).contains(m.method()))
 				{
 					classes.add(m.klass());
+					methodGroups.add(new ArrayList<>());
 				}
-				map.computeIfAbsent(m.klass(), k -> new ArrayList<>()).add(m.method());
+				methodGroups.get(methodGroups.size() - 1).add(m.method());
 			}
 			return classes;
 		}
@@ -222,6 +227,7 @@ public class FilteredTests
 			super(klass, builder.runners(null, getClasses(klass)));
 			Filter f = new Filter()
 			{
+				int i = 0;
 				@Override
 				public boolean shouldRun(Description desc)
 				{
@@ -231,7 +237,10 @@ public class FilteredTests
 						return true;
 					}
 
-					List<String> methods = map.get(desc.getTestClass());
+					if (desc.getTestClass() != classes.get(this.i))
+						this.i++;
+
+					List<String> methods = methodGroups.get(this.i);
 					return methods != null && methods.contains(methodName);
 				}
 
@@ -242,6 +251,17 @@ public class FilteredTests
 				}
 			};
 			super.filter(f);
+			int[] j = { 0 };
+			Sorter s = new Sorter((o1, o2) -> {
+				if (classes.get(j[0]) != o1.getTestClass())
+					j[0]++;
+				List<String> methods = methodGroups.get(j[0]);
+				return Integer.compare(
+					methods.indexOf(o1.getMethodName()),
+					methods.indexOf(o2.getMethodName()));
+			});
+
+			super.sort(s);
 		}
 	}
 
