@@ -117,11 +117,11 @@ function join_by {
 }
 
 output_classes() {
-	grep "<testcase" | grep 'classname="' | sed 's/.* classname="\([^"]*\)".*/\1.class/' | sort -u
+	grep "<testcase" | grep 'classname="' | sed 's/.* classname="\([^"]*\)".*/\1.class/' | awk '!seen[$0]++'
 }
 
 output_methods() {
-	grep "<testcase" | grep 'classname="' | sed 's/.* name="\([^"]*\)".* classname="\([^"]*\)"\( time="\([^"]*\)"\)\?.*/\2.class\t\1\t\4/' | sort -u
+	grep "<testcase" | grep 'classname="' | sed 's/.* name="\([^"]*\)".* classname="\([^"]*\)"\( time="\([^"]*\)"\)\?.*/\2.class\t\1\t\4/' | awk '!seen[$0]++'
 }
 
 
@@ -194,10 +194,11 @@ public class FilteredTests
 
 	public static class MethodFilter extends Suite
 	{
-		private static Map<Class<?>, List<String>> map;
 
-		private static Map<Class<?>, List<String>> getClasses(Class<?> klass)
-			throws InitializationError
+		private static List<List<String>> methodGroups = new ArrayList<>();
+		private static List<Class<?>> classes = new ArrayList<>();
+
+		private static List<Class<?>> getClasses(Class<?> klass) throws InitializationError
 		{
 			SuiteMethods annotation = klass.getAnnotation(SuiteMethods.class);
 			if (annotation == null)
@@ -206,19 +207,27 @@ public class FilteredTests
 					"class '%s' must have a Method or SuiteMethods annotation",
 					klass.getName()));
 			}
-			Map<Class<?>, List<String>> result = new HashMap<>();
 			for (Method m : annotation.value())
 			{
-				result.computeIfAbsent(m.klass(), k -> new ArrayList<>()).add(m.method());
+				// group method calls if possible
+				if (classes.isEmpty()
+					|| classes.get(classes.size() - 1) != m.klass()
+					|| methodGroups.get(classes.size() - 1).contains(m.method()))
+				{
+					classes.add(m.klass());
+					methodGroups.add(new ArrayList<>());
+				}
+				methodGroups.get(methodGroups.size() - 1).add(m.method());
 			}
-			return result;
+			return classes;
 		}
 
 		public MethodFilter(Class<?> klass, RunnerBuilder builder) throws Exception
 		{
-			super(klass, builder.runners(null, new ArrayList<>((map = getClasses(klass)).keySet())));
+			super(klass, builder.runners(null, getClasses(klass)));
 			Filter f = new Filter()
 			{
+				int i = 0;
 				@Override
 				public boolean shouldRun(Description desc)
 				{
@@ -228,7 +237,10 @@ public class FilteredTests
 						return true;
 					}
 
-					List<String> methods = map.get(desc.getTestClass());
+					if (desc.getTestClass() != classes.get(this.i))
+						this.i++;
+
+					List<String> methods = methodGroups.get(this.i);
 					return methods != null && methods.contains(methodName);
 				}
 
@@ -239,6 +251,17 @@ public class FilteredTests
 				}
 			};
 			super.filter(f);
+			int[] j = { 0 };
+			Sorter s = new Sorter((o1, o2) -> {
+				if (classes.get(j[0]) != o1.getTestClass())
+					j[0]++;
+				List<String> methods = methodGroups.get(j[0]);
+				return Integer.compare(
+					methods.indexOf(o1.getMethodName()),
+					methods.indexOf(o2.getMethodName()));
+			});
+
+			super.sort(s);
 		}
 	}
 

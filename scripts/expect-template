@@ -1,0 +1,16 @@
+#!/usr/bin/expect --
+
+send_user "$argv0\n"
+
+spawn command <args>
+
+expect "Command printed this: "
+ 
+send -- "<input1>\r"
+
+expect "Command prints another line: "
+
+send -- "<input2>\r"
+
+expect eof
+
