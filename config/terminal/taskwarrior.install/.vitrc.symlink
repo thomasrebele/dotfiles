@@ -10,9 +10,6 @@ map s=:
 map h=d
 map H=D
 
-map n=k
-map r=j
-
 map 1=:ready<Return>
 map 2=:blocking<Return>
 map 3=:waiting<Return>
@@ -26,5 +23,7 @@ map 8=:long<Return>
 map 9=:next<Return>
 map 0=:ready<Return>
  
+
+set show_empty_report=yes
 
 
