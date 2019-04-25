@@ -10,6 +10,10 @@ while :; do
 			subject="classes"
 			;;
 
+		--method-list)
+			subject="method-list"
+			;;
+
 		--all)
 			all="true"
 			defaults="false"
@@ -164,6 +168,10 @@ public class FilteredTests
 }
 EOF
 
+elif [ "$subject" == "method-list" ]; then
+
+	methods "$1"
+
 elif [ "$subject" == "methods" ]; then
 
 cat <<EOF
@@ -253,6 +261,8 @@ public class FilteredTests
 			super.filter(f);
 			int[] j = { 0 };
 			Sorter s = new Sorter((o1, o2) -> {
+				if (o1.getMethodName() == null || o2.getMethodName() == null)
+					return 1;
 				if (classes.get(j[0]) != o1.getTestClass())
 					j[0]++;
 				List<String> methods = methodGroups.get(j[0]);
@@ -277,7 +287,7 @@ EOF
 	{ 
 		print "\t@Method(";
 		print "\t\tklass = " $1 ",";
-		print "\t\tmethod = \"" $2 "\")";
+		print "\t\tmethod = \"" $2 "\") // time: " $3;
 
 		if($3 != "") {
 			sum += $3;
