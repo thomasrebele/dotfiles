@@ -42,6 +42,7 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.NoFrillsDecoration
 
 -- sticky windows
 import XMonad.Actions.CopyWindow
@@ -60,10 +61,42 @@ myXPConfig = defaultXPConfig
 --	) |||
 --	noBorders (fullscreenFull Full)
 
+-- Colors, fonts and paths
+dzenFont       = "-*-montecarlo-medium-r-normal-*-10-*-*-*-*-*-*-*"
+colorBlack     = "#020202" --Background
+colorBlackAlt  = "#1c1c1c" --Black Xdefaults
+colorGrayLight = "#aaaaaa" --Gray
+colorGray      = "#444444" --Gray
+colorGrayAlt   = "#101010" --Gray dark
+colorWhite     = "#a9a6af" --Foreground
+colorWhiteAlt  = "#9d9d9d" --White dark
+colorMagenta   = "#8e82a2"
+colorBlue      = "#77ccff"
+colorBlueAlt   = "#3955c4"
+colorRed       = "#f7a16e"
+colorRedAlt    = "#e0105f"
+colorGreen     = "#66ff66"
+colorGreenAlt  = "#558965"
+
+myTitleTheme :: Theme
+myTitleTheme = defaultTheme
+	{ fontName            = dzenFont
+	, inactiveBorderColor = colorBlackAlt
+	, inactiveColor       = colorBlack
+	, inactiveTextColor   = colorGrayLight
+	, activeBorderColor   = colorGray
+	, activeColor         = colorBlackAlt
+	, activeTextColor     = colorBlue
+	, urgentBorderColor   = colorGray
+	, urgentTextColor     = colorGreen
+	, decoHeight          = 12
+	}
+
 myLayout = id
      . XMonad.Layout.NoBorders.smartBorders
      . mkToggle (NOBORDERS ?? FULL ?? NBFULL ?? EOT)
      . mkToggle (single MIRROR)
+     . noFrillsDeco shrinkText myTitleTheme
      $ 
         ResizableTall 1 (3/100) (1/2) [] 
         ||| spiral (16/19)
