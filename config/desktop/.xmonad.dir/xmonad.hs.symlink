@@ -42,6 +42,7 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.PerWorkspace
 import XMonad.Layout.NoFrillsDecoration
 
 -- sticky windows
@@ -73,6 +74,7 @@ colorWhiteAlt  = "#9d9d9d" --White dark
 colorMagenta   = "#8e82a2"
 colorBlue      = "#77ccff"
 colorBlueAlt   = "#3955c4"
+colorBlueDark  = "#091554"
 colorRed       = "#f7a16e"
 colorRedAlt    = "#e0105f"
 colorGreen     = "#66ff66"
@@ -81,18 +83,30 @@ colorGreenAlt  = "#558965"
 myTitleTheme :: Theme
 myTitleTheme = defaultTheme
 	{ fontName            = dzenFont
-	, inactiveBorderColor = colorBlackAlt
-	, inactiveColor       = colorBlack
-	, inactiveTextColor   = colorGrayLight
-	, activeBorderColor   = colorGray
-	, activeColor         = colorBlackAlt
-	, activeTextColor     = colorBlue
+	, inactiveBorderColor = colorWhiteAlt
+	, inactiveColor       = colorWhite
+	, inactiveTextColor   = colorGrayAlt
+	, activeBorderColor   = colorWhiteAlt
+	, activeColor         = colorWhite
+	, activeTextColor     = colorBlueDark
 	, urgentBorderColor   = colorGray
 	, urgentTextColor     = colorGreen
 	, decoHeight          = 12
 	}
 
-myLayout = id
+-- TODO: combine those two
+
+baseLayout = id
+     . XMonad.Layout.NoBorders.smartBorders
+     . mkToggle (NOBORDERS ?? FULL ?? NBFULL ?? EOT)
+     . mkToggle (single MIRROR)
+     . id
+     $ 
+        ResizableTall 1 (3/100) (1/2) [] 
+        ||| spiral (16/19)
+
+
+eclipseLayout = id
      . XMonad.Layout.NoBorders.smartBorders
      . mkToggle (NOBORDERS ?? FULL ?? NBFULL ?? EOT)
      . mkToggle (single MIRROR)
@@ -100,6 +114,8 @@ myLayout = id
      $ 
         ResizableTall 1 (3/100) (1/2) [] 
         ||| spiral (16/19)
+
+myLayout = onWorkspaces ["1"] eclipseLayout baseLayout
 
 myManageHook = composeAll [ 
 		resource =? "vit" --> doShift "9",

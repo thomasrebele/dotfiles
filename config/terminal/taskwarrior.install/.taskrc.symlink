@@ -23,7 +23,10 @@ report._reviewed.filter=( reviewed.none: or reviewed.before:now-6days ) and ( +P
 
 ### urgency settings
 
-urgency.user.project.foss.coefficient = -2
+uda.priority.values=H,M,,L
+
+urgency.uda.priority.L.coefficient=-2
+urgency.user.project.foss.coefficient = -10
 urgency.user.project.block.coefficient = -1000
 
 

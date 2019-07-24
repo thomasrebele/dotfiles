@@ -287,7 +287,7 @@ EOF
 	{ 
 		print "\t@Method(";
 		print "\t\tklass = " $1 ",";
-		print "\t\tmethod = \"" $2 "\") // time: " $3;
+		print "\t\tmethod = \"" $2 "\") "  #"// time: " $3;
 
 		if($3 != "") {
 			sum += $3;
