@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-zgrep -e "Error getting user list from org.freedesktop.Accounts" \
+zgrep --text -e "Error getting user list from org.freedesktop.Accounts" \
 	-e "Stopped target Graphical Interface" \
 	-e "Reached target \(Graphical Interface\|Shutdown\)" \
 	-e "systemd\[1\]: Stopped" \
