@@ -63,4 +63,12 @@ noremap <leader>ec y
 noremap <leader>ecc yy
 
 let @t=a<SPACE>//<SPACE>TODO<SPACE>tre<SPACE>
+let @n=vey[ma<RETURN>if(<ESC>pa<SPACE>==<SPACE>null)<RETURN>throw<SPACE>new<SPACE>IllegalArgumentException("Argument <ESC>pa<SPACE>is<SPACE>required.");<ESC>
+
+""" goodies
+" 
+" delegate call, place cursor "return <HERE>null;"
+"	mxA<RETURN><ESC>?public<RETURN>wwv%"vy'xwictx.<ESC>gve"vPv%J0f(/[^<SPACE>]<RETURN>snoh<RETURN>dt<SPACE>
+" delete Type for other parameters
+"	f,gdt<SPACE>f,gdt<SPACE>f,gdt<SPACE>	
 
