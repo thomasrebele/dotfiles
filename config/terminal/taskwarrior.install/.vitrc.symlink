@@ -7,8 +7,8 @@ map Q=:!w echo "quit with F5"
 map q=:!w echo "quit with F5"
 
 map s=:
-map h=d
-map H=D
+map h=Ph
+map l=Pl
 
 map 1=:ready<Return>
 map 2=:blocking<Return>
