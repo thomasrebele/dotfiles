@@ -1,0 +1,16 @@
+
+Include config.d/* 
+
+# easy vpn over ssh:
+#   sshuttle -r <server_name> <subnet>
+#   where subnet is something like 137.194.0.0/16
+
+# General
+Host localhost
+	Compression no
+
+Host *
+	ForwardX11 yes
+	Compression yes
+	GSSAPIAuthentication no
+	ConnectTimeout 45
