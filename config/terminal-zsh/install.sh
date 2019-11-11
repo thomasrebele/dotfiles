@@ -6,7 +6,7 @@ fi
 
 
 if [ ! -e ~/software/zsh-git-prompt ]; then
-	github ~/software/ thomasrebele/zsh-git-prompt
+	github ~/software/ zsh-git-prompt/zsh-git-prompt
 	(
 		cd ~/software/zsh-git-prompt
 		./build.sh

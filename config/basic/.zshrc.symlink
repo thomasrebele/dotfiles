@@ -141,6 +141,7 @@ PROMPT+='%f' # end foreground color
 
 if [ -d ~/software/zsh-git-prompt ]; then
 	source ~/software/zsh-git-prompt/zshrc.sh
+	export GIT_PROMPT_EXECUTABLE="python"
 	PROMPT+='$(git_super_status)'
 fi
 
@@ -180,4 +181,14 @@ zstyle ':completion:*' matcher-list '' \
   'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
   'r:|?=** m:{a-z\-}={A-Z\_}'
 
+# show dirty git repositories
+if [ -e ~/software/zsh-git-prompt/utils/git-summary.sh ]; then
+	local lock_file=/tmp/.dirty-repos
+	if [ ! -e $lock_file ]; then
+		touch $lock_file
+		if [ -e $lock_file ]; then
+			source ~/software/zsh-git-prompt/utils/git-summary.sh
+		fi
+	fi
+fi
 
