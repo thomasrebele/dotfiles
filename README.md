@@ -4,7 +4,9 @@ A collection of configuration files and scripts.
 
 ## Usage
 
-
+```
+./install.sh config/basic 
+```
 
 ## Design
 
