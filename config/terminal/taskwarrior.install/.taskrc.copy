@@ -1,0 +1,14 @@
+# For more documentation, see http://taskwarrior.org or try 'man task', 'man task-color',
+# 'man task-sync' or 'man taskrc'
+# Use the command 'task show' to see all defaults and overrides
+
+################################################################################
+# Configuration shared by all machines
+################################################################################
+
+include ~/.taskrc.common
+
+################################################################################
+# Local configuration
+################################################################################
+
