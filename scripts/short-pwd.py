@@ -34,7 +34,10 @@ import os, sys
 if(len(sys.argv) > 1):
     pwd = sys.argv[1]
 else:
-    pwd = os.getcwd()
+    # path without symbolic links
+    # pwd = os.getcwd()
+    # path with symbolic links
+    pwd = os.getenv('PWD')
 homedir = os.path.expanduser('~')
 pwd = pwd.replace(homedir, '~', 1)
 pwd = shorten(pwd, 35)
