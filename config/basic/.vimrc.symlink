@@ -266,6 +266,8 @@ noremap lv gv
 noremap lt gt
 noremap lT gT
 noremap L G
+noremap lu gu
+noremap lU gU
 
 " 'edit'
 " noremap <leader>eo J
