@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # helper functions
 abort() {
@@ -6,15 +6,26 @@ abort() {
 	exit 0
 }
 
+# https://unix.stackexchange.com/q/397916/153926
+repl() {
+	local pattern=$(printf '%s\n' "$1" | sed 's:[][\/.^$*]:\\&:g') 
+	local replace=$(printf '%s\n' "$2" | sed 's:[\/&]:\\&:g;$!s/$/\\/')
+	sed "s/$pattern/$replace/g"
+}
+
+replace() {
+	printf '%s' "$1" | repl "$2" "$3"
+}
+
 add_tag() {
-	new_tags=${new_tags/]/,\"$1\"]}
+	new_tags=$(replace   "$new_tags"   "]"   ",\"$1\"]")
 }
 
 parse_ctx() {
 	while [ "$#" -ge "1" ]; do
 		case "$1" in
 			"+"*)
-				tag=${1:1}
+				tag=$(printf '%s' "$1" | cut -c2-)
 				add_tag "$tag"
 				echo "set-context hook automatically added tag $tag"
 				;;
@@ -30,12 +41,12 @@ parse_ctx() {
 read -r new_task
 
 ctx_name=$(task _show | grep "context=" | sed 's/^[^=]*=//')
-if [ "$ctx_name" == "" ]; then
+if [ -z "$ctx_name" ]; then
 	abort
 fi
 
 ctx=$(task _show | grep "context.$ctx_name=" | sed 's/^[^=]*=//')
-if [ "$ctx" == "" ]; then
+if [ -z "$ctx" ]; then
 	abort
 fi
 
@@ -47,13 +58,13 @@ new_tags=${old_tags:-[]}
 parse_ctx $ctx
 
 # fix tags
-new_tags=${new_tags/\[,/\[}
+new_tags=$(replace   "$new_tags"   "[,"   "[" )
 
 # update json
 if [ -n "$old_tags" ]; then
-	new_task=${new_task/"$old_tags"/"$new_tags"}
+	new_task=$(replace   "$new_task"   "\"$old_tags\""   "\"$new_tags\"")
 else 
-	new_task=${new_task/,\"uuid\":/,\"tags\":$new_tags,\"uuid\":}
+	new_task=$(replace   "$new_task"   ",\"uuid\":"   ",\"tags\":$new_tags,\"uuid\":")
 fi
 
 printf '%s' "$new_task"
