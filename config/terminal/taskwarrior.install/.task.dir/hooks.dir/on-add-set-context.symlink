@@ -29,8 +29,13 @@ parse_ctx() {
 
 read -r new_task
 
-ctx=$(LANG=C task context show | sed "s/Context '.*' with filter '\(.*\)' is currently applied./\1/")
-if [ "$ctx" == "No context is currently applied." ]; then
+ctx_name=$(task _show | grep "context=" | sed 's/^[^=]*=//')
+if [ "$ctx_name" == "" ]; then
+	abort
+fi
+
+ctx=$(task _show | grep "context.$ctx_name=" | sed 's/^[^=]*=//')
+if [ "$ctx" == "" ]; then
 	abort
 fi
 
