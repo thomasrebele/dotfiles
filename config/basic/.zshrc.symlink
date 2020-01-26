@@ -132,7 +132,7 @@ PROMPT+='%*:' # time (hh:mm:ss)
 PROMPT+='%B' # begin bold
 if [ -e ~/.dotfiles/scripts/short-pwd.py ]; then
 	# shortened working directory
-	PROMPT+='$(python ~/.dotfiles/scripts/short-pwd.py)'
+	PROMPT+='$(python -S -s -OO ~/.dotfiles/scripts/short-pwd.py)'
 else
 	PROMPT+='%~' 
 fi
