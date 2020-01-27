@@ -175,7 +175,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
    , ((modMask,                xK_Tab   ), sendMessage $ Toggle MIRROR)
-   , ((modMask,                xK_o     ), rectFloatFocused)
+   , ((modMask,                xK_o     ), rectFloatFocusedV)
+   , ((modMask,                xK_adiaeresis     ), rectFloatFocusedH)
    , ((modMask,                xK_f     ), sendMessage $ Toggle FULL)
    , ((modMask .|. shiftMask,  xK_f     ), sendMessage $ ToggleStruts )
  
@@ -262,6 +263,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         | (key, sc) <- zip [xK_x, xK_v, xK_l] [0..]
         , (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]]
     where
-        rectFloatFocused = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0 0.0 1.0 2.0) f
+        rectFloatFocusedV = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0 0.0 1.0 2.0) f
+        rectFloatFocusedH = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0008 0.0008 2.0 1.0) f
 
 
