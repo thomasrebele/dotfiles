@@ -22,8 +22,8 @@ fix() {
 	orig=$(basename "$1")
 	link=".rev_map.$uuid"
 	cd "$dir"
-	if [ ! -L "$link" ]; then
-		ln -s "$orig" "$link" 
+	if [ ! -e "$link" ]; then
+		ln "$orig" "$link" 
 	fi
 }
 export -f fix
