@@ -433,7 +433,8 @@ augroup END
 " Plugin config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:30,results:30'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Misc
