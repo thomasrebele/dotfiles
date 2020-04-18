@@ -8,7 +8,7 @@
 #[diff]
 #	external = /home/tr/Programme/gitdiff.py
 [merge]
-	tool = gitvimmerge
+	tool = meld
 
 [mergetool "mymeld"]
 	cmd = $HOME/.dotfiles/scripts/gitmerge.sh $BASE $LOCAL $REMOTE $MERGED
