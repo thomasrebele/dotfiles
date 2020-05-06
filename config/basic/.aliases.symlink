@@ -7,4 +7,6 @@ alias python=python3
 alias xc="xclip -selection clipboard"
 alias tmux="tmux -2"
 alias thunar="doublecmd"
+alias rgj='rg --glob "*.java"'
+
 
