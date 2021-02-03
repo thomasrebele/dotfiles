@@ -13,3 +13,11 @@ if [ ! -e ~/software/zsh-git-prompt ]; then
 	)
 fi
 
+if [ ! -e ~/software/fzf ]; then
+	github ~/software/ junegunn/fzf
+	(
+		cd ~/software/fzf
+		./install --key-bindings --completion --no-update-rc
+	)
+fi
+
