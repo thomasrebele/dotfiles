@@ -2,7 +2,14 @@
 
 packages=$(aptitude search '?upgradable ?installed !?automatic' | awk '{print $2}')
 
-echo "trying to install $packages"
+
+tmp="/tmp/partial-upgrade"
+
+echo "# trying to install packages" > "$tmp"
+echo "$packages" > "$tmp"
+vim "$tmp"
+
+echo "continue? otherwise press ctrl+c"
 read xyz
 
 if [ "$1" == "" ];
@@ -12,7 +19,7 @@ else
 	continue=1;
 fi
 
-for i in $packages
+for i in $(cat $tmp | grep -v "^#")
 do
 	if [ "$i" == "$1" ];
 	then
@@ -24,7 +31,7 @@ do
 		continue;
 	fi
 
-	aptitude install -y --safe-resolver $i;
+	aptitude install -y --safe-resolver "$i";
 	echo "pausing before starting next task";
 	sleep 1;
 done
