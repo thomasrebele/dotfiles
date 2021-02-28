@@ -41,3 +41,5 @@
 	pretty = format:%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,blue)%>(22,trunc) %ci %C(auto,green)%<(15,trunc)%aN%C(auto,reset)%s%C(auto,red)% gD% D
 [svn]
 	pushmergeinfo = true
+[pull]
+	ff = only
