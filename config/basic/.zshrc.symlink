@@ -275,3 +275,6 @@ if command -v fortune >/dev/null 2>&1; then
 fi
 
 
+if [ -e ~/.config/broot/launcher/bash/br ]; then
+	source ~/.config/broot/launcher/bash/br
+fi

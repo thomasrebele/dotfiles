@@ -44,6 +44,7 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.NoFrillsDecoration
+import qualified XMonad.Actions.FlexibleResize as Flex
 
 -- sticky windows
 import XMonad.Actions.CopyWindow
@@ -128,6 +129,12 @@ myManageHook = composeAll [
 		className =? "Java" --> doShift "1" -- eclipse spash screen
 	]
 
+
+-- myMouse x = [ 
+--     ((modMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+-- 	]
+-- newMouse x = M.union (mouseBindings def x) (M.fromList (myMouse x))
+
 myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 main = 
@@ -147,8 +154,11 @@ main =
 			windows $ (W.greedyView "9")
 			setWMName "LG3D"
 --			sendMessage $ Toggle FULL
-
-	} 
+		
+	}  `additionalMouseBindings`
+                [ 
+					((mod4Mask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+                ]
 
 
 -- ATTENTION: somehow keybindings are ignored???
