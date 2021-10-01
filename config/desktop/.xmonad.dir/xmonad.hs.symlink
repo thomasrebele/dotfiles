@@ -64,7 +64,7 @@ myXPConfig = defaultXPConfig
 --	noBorders (fullscreenFull Full)
 
 -- Colors, fonts and paths
-dzenFont       = "-*-montecarlo-medium-r-normal-*-10-*-*-*-*-*-*-*"
+dzenFont       = "-*-*-*-*-*-*-*-210-*-*-*-*-*-*"
 colorBlack     = "#020202" --Background
 colorBlackAlt  = "#1c1c1c" --Black Xdefaults
 colorGrayLight = "#aaaaaa" --Gray
@@ -92,7 +92,7 @@ myTitleTheme = defaultTheme
 	, activeTextColor     = colorBlueDark
 	, urgentBorderColor   = colorGray
 	, urgentTextColor     = colorGreen
-	, decoHeight          = 12
+	, decoHeight          = 30
 	}
 
 -- TODO: combine those two
