@@ -138,7 +138,7 @@ myManageHook = composeAll [
 myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 main = 
-	xmonad $ myConfig {
+	xmonad $ docks myConfig {
 		workspaces = myWorkspaces,
 		modMask = mod4Mask,
 		terminal = "gnome-terminal",
@@ -149,6 +149,7 @@ main =
 		-- hooks
 		manageHook = myManageHook <+> manageDocks <+> (isFullscreen --> doFullFloat) <+> manageHook myConfig,
 		layoutHook = avoidStruts $ showWName myLayout,
+		handleEventHook = handleEventHook defaultConfig <+> docksEventHook,
 		-- startupHook = startupHook desktopConfig <+> (windows $ (W.greedyView 9))
 		startupHook = do 
 			windows $ (W.greedyView "9")
@@ -168,7 +169,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ---- terminal
     [ ((modMask,               xK_Return)       , spawn $ XMonad.terminal conf)
     ---- lock
-    , ((modMask,               xK_l)            , spawn "xflock4")
+    -- , ((modMask,               xK_l)            , spawn "xflock4")
     ---- launch menu
     , ((modMask,               xK_b     ), spawn "dmenu_run")
     ---- Debug X environment variables
@@ -217,6 +218,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- WindowBringer
     , ((modMask , xK_k     ), gotoMenu)
     , ((modMask .|. shiftMask , xK_k     ), bringMenu)
+
 
     -- submap, press win+d, and then key of submap
     , ((modMask ,                xK_d)       , submap . M.fromList $
@@ -270,7 +272,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     [((modMask .|. mask, key), f sc)
-        | (key, sc) <- zip [xK_x, xK_v, xK_l] [0..]
+        -- | (key, sc) <- zip [xK_x, xK_v, xK_l] [0,2,1]
+        | (key, sc) <- zip [xK_x, xK_v] [0,1]
         , (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]]
     where
         rectFloatFocusedV = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0 0.0 1.0 2.0) f
