@@ -21,3 +21,7 @@ if [ ! -e ~/software/fzf ]; then
 	)
 fi
 
+if [ ! -e ~/software/fzf-tab-completion ]; then
+	github ~/software/ lincheney/fzf-tab-completion
+fi
+
