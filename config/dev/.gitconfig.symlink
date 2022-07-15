@@ -8,15 +8,12 @@
 #[diff]
 #	external = /home/tr/Programme/gitdiff.py
 [merge]
-	tool = meld
-
-[mergetool "mymeld"]
-	cmd = $HOME/.dotfiles/scripts/gitmerge.sh $BASE $LOCAL $REMOTE $MERGED
+	tool = ~/.dotfiles/scripts/dev/gitvimmerge.sh
 
 [mergetool "gitvimmerge"]
 	trustExitCode = true
 	keepBackup = false
-	cmd = gitvimmerge.sh vim $BASE $LOCAL $REMOTE $MERGED
+	cmd = ~/.dotfiles/scripts/dev/gitvimmerge.sh vim $BASE $LOCAL $REMOTE $MERGED
 
 [gui]
 	editor = gvim
@@ -25,11 +22,15 @@
 	fontdiff = DejaVu Sans Mono,9,-1,5,50,0,0,0,0,0
 	tabwidth = 4
 	spellcheck = false
+	textwidth = 150
+	safemode = true
 #[push]
 #	default = simple
 
 [alias]
 	pushall = !git remote | xargs -L1 git push --all
+	diffall = difftool --dir-diff
+	ff = merge --ff-only
 [push]
 	default = matching
 [diff]

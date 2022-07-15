@@ -250,7 +250,6 @@ inoremap <F5> <esc>:q<F5>
 " adaptions for NEO keyboard layout
 " (RSI prevention)
 " use s instead of : (avoid strain on little finger)
-noremap : <Nop>
 noremap s :
 noremap <C-E> :
 noremap j <Nop>
@@ -542,4 +541,10 @@ if executable("vim-stat.sh")
     set verbosefile=~/.vim-stat/current-log
 endif
 
-
+augroup XSD
+    autocmd!
+    autocmd FileType xsd let g:xml_syntax_folding=1
+    autocmd FileType xsd setlocal foldmethod=syntax
+    autocmd FileType xsd :syntax on
+    autocmd FileType xsd :%foldopen!
+augroup END
