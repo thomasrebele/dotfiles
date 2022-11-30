@@ -14,6 +14,11 @@ while :; do
 			subject="method-list"
 			;;
 
+		--class-list)
+			subject="class-list"
+			;;
+
+
 		--all)
 			all="true"
 			defaults="false"
@@ -115,11 +120,6 @@ EOF
 	) -
 }
 
-# https://stackoverflow.com/a/17841619/1562506
-function join_by { 
-	local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}";
-}
-
 output_classes() {
 	grep "<testcase" | grep 'classname="' | sed 's/.* classname="\([^"]*\)".*/\1.class/' | awk '!seen[$0]++'
 }
@@ -135,6 +135,29 @@ classes() {
 
 methods() {
 	cat "$1" | filter_failures | output_cases | output_methods
+}
+
+class_list() {
+	methods "$1" | awk -F$'\t' '
+		BEGIN {
+			delete order[0]
+		}
+		{
+			key=$1
+			if(!(key in time)) {
+				cnt++;
+				order[cnt] = $1
+				time[key] = 0
+			}
+			time[key] += $3
+			next
+		}
+		END {
+			for(i=1; i<=cnt; i++) {
+				print order[i] "\t" time[order[i]]
+			}
+		}
+	'
 }
 
 
@@ -154,12 +177,8 @@ import org.junit.runners.Suite.*;
 @SuiteClasses({ //
 EOF
 
-echo -n "	"
+class_list "$1" | awk -F$'\t' '{print "\t" $1 ", // " $2}'
 
-join_by ', //
-	' $(classes "$1")
-
-echo ", //"
 cat <<EOF
 })
 public class FilteredTests
@@ -167,6 +186,11 @@ public class FilteredTests
 
 }
 EOF
+
+
+elif [ "$subject" == "class-list" ]; then
+
+	class_list "$1"
 
 elif [ "$subject" == "method-list" ]; then
 
@@ -275,6 +299,7 @@ public class FilteredTests
 		}
 	}
 
+	//@formatter:off
 	@RunWith(MethodFilter.class)
 EOF
 
@@ -285,9 +310,9 @@ EOF
 	}
 
 	{ 
-		print "\t@Method(";
-		print "\t\tklass = " $1 ",";
-		print "\t\tmethod = \"" $2 "\") "  #"// time: " $3;
+		method = $2;
+		gsub("\\\\", "\\\\\\\\", method);
+		print "\t@Method(klass = " $1 ",method = \"" method "\") "  #"// time: " $3;
 
 		if($3 != "") {
 			sum += $3;
