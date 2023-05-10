@@ -138,7 +138,7 @@ myManageHook = composeAll [
 myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 main = 
-	xmonad $ docks myConfig {
+	xmonad $ docks $ myConfig {
 		workspaces = myWorkspaces,
 		modMask = mod4Mask,
 		terminal = "gnome-terminal",
@@ -148,7 +148,7 @@ main =
 
 		-- hooks
 		manageHook = myManageHook <+> manageDocks <+> (isFullscreen --> doFullFloat) <+> manageHook myConfig,
-		layoutHook = avoidStruts $ showWName myLayout,
+		layoutHook = avoidStruts $ desktopLayoutModifiers $ showWName myLayout,
 		handleEventHook = handleEventHook defaultConfig <+> docksEventHook,
 		-- startupHook = startupHook desktopConfig <+> (windows $ (W.greedyView 9))
 		startupHook = do 
