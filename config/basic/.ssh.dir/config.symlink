@@ -14,3 +14,5 @@ Host *
 	Compression yes
 	GSSAPIAuthentication no
 	ConnectTimeout 45
+	HostKeyAlgorithms ssh-ed25519
+
