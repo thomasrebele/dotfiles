@@ -1,0 +1,11 @@
+/*menuitem label { min-height: 128px }*/
+/*menuitem image { -gtk-icon-transform: scale(2); }*/
+
+/* Q&D fixes for applications */
+
+/* compact lists for Eclipse */
+window.background>box.vertical>scrolledwindow>widget treeview {
+	font-size: 16px;
+	/*color: #ff0000;*/
+}
+
