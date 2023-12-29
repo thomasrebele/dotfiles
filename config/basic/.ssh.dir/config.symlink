@@ -9,6 +9,9 @@ Include config.d/*
 Host localhost
 	Compression no
 
+Host 192.168.0.250
+	Compression no
+
 Host *
 	ForwardX11 yes
 	Compression yes
