@@ -18,6 +18,11 @@ while :; do
 			subject="class-list"
 			;;
 
+		--package-list)
+			subject="package-list"
+			;;
+
+
 
 		--all)
 			all="true"
@@ -138,28 +143,46 @@ methods() {
 }
 
 class_list() {
-	methods "$1" | awk -F$'\t' '
+	methods "$1" | aggregate_entries
+}
+
+# usage: <steps_to_remove_from_name>
+aggregate_entries() {
+	awk -v toRemove="$1" -F$'\t' '
 		BEGIN {
 			delete order[0]
 		}
 		{
-			key=$1
+			entry_time = $3
+			if(toRemove > 0) {
+				split($1,steps,".")
+				key = ""
+				for(i = 1; i<=length(steps)-toRemove; i++) {
+					if(i > 1) {
+						key = key "."
+					}
+					key = key steps[i]
+				}
+			}
+			else {
+				key = $1
+			}
+
 			if(!(key in time)) {
 				cnt++;
-				order[cnt] = $1
+				order[cnt] = key
 				time[key] = 0
 			}
-			time[key] += $3
+			time[key] += entry_time
 			next
 		}
 		END {
 			for(i=1; i<=cnt; i++) {
-				print order[i] "\t" time[order[i]]
+				print order[i] "\t\t" time[order[i]]
 			}
 		}
 	'
 }
-
 
 # generate output
 
@@ -187,6 +210,9 @@ public class FilteredTests
 }
 EOF
 
+elif [ "$subject" == "package-list" ]; then
+
+	methods "$1" | aggregate_entries 2
 
 elif [ "$subject" == "class-list" ]; then
 

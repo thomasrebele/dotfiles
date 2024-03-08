@@ -24,7 +24,7 @@ do
 	if [ ! -d "$dir" ]; then
 		mkdir "$dir"
 	fi
-	echo cp "$src/$i" "$dst/$i"
+	echo cp -r "$src/$i" "$dst/$i"
 	cp -r "$src/$i" "$dst/$i"
 done
 

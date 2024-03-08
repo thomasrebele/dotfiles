@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # usage: <files...>
-# creates a the n+1-th folder and moves the given files into it
+# creates the n+1-th folder and moves the given files into it
 
 MAX=$(find -regex './[0-9]+' -type d -printf '%f\n' | sort -n | tail -n 1 || echo 0)
 

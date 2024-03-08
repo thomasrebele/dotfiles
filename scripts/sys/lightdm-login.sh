@@ -9,4 +9,6 @@ zgrep --text -e "Error getting user list from org.freedesktop.Accounts" \
 	-e "Starting Suspend" \
 	-e "systemd-sleep" \
 	-e "systemd\[1\]: Stopped" \
-	$(/bin/ls -rt $files) | sed 's/^[^:]*://' | sed 's/lightdm.*//' 
+	$(/bin/ls -rt $files) | \
+	sed 's/^[^:]*://;  s/lightdm.*//;  s/^[0-9]\{4\}-\([^T]*\)T\(..:..\):[^ ]* orchestra-tre/\1 \2/' | \
+	awk ' LAST != $1 { LAST = $1; print "---" } { print $0} '
