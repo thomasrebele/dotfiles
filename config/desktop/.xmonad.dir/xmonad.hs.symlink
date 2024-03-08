@@ -273,7 +273,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     [((modMask .|. mask, key), f sc)
         -- | (key, sc) <- zip [xK_x, xK_v, xK_l] [0,2,1]
-        | (key, sc) <- zip [xK_x, xK_v] [0,1]
+        | (key, sc) <- zip [xK_x, xK_v, xK_l] [0,1,2]
+        -- | (key, sc) <- zip [xK_x, xK_v] [0,1]
         , (f, mask) <- [(viewScreen def, 0), (sendToScreen def, shiftMask)]]
     where
         rectFloatFocusedV = withFocused $ \f -> windows =<< appEndo `fmap` runQuery (doRectFloat $ W.RationalRect 0.0 0.0 1.0 2.0) f
