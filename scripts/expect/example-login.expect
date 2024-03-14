@@ -1,0 +1,64 @@
+#!/usr/bin/expect --
+
+# Installation:
+#   store password with
+#     (pwd in terminal: the pwd for SOME_COMMAND_..., pwd in extra window: storage pwd)
+#     sudo secret-tool store --label='expect' user tv
+#
+# Usage:
+#   sudo /usr/bin/expect path_to_this_script
+
+set timeout -1
+
+set ::env(LD_LIBRARY_PATH) /usr/local/lib
+
+send_user "$argv0\n"
+
+# get the password from secret-tool
+log_user 0
+spawn secret-tool lookup user tv
+expect -re "(.*)\n"
+set pwd $expect_out(1,string)
+expect eof
+log_user 1
+
+spawn /usr/sbin/SOME_COMMAND_REQUIRING_A_PASSWORD
+
+expect "Password: "
+send -- "${pwd}\r"
+
+
+# command requires 6 digits for 2FA
+# but does not display them
+# so get them from the user with expect and send them to the command
+expect {
+	"Challenge: " {
+
+		expect_user {
+			-re {[0-9]{6}\n} {
+				# the good case
+			}
+			-re {.+} {
+				send_user "illegal format, expected 6 digits\nAnswer: "
+				exp_continue
+			}
+		}
+
+		send_user "(expect: received input from user)"
+		send_user $expect_out(buffer)
+		send_user ""
+
+		send -- $expect_out(buffer)
+		interact
+	}
+
+	eof {
+
+	}
+}
+
+
+
+send_user "(expect: quitting)"
+
+
