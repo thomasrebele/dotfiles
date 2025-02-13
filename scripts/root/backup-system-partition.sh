@@ -4,6 +4,9 @@ echo "backup system disk (/dev/sda)"
 echo "WARNING: kills all processes and remounts filesystem read-only"
 echo "usage: <dstDir> <dstFilename>"
 
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 if [ "$#" -ne 2 ]; then
 	echo "Illegal number of parameters"
 	exit
@@ -17,23 +20,8 @@ mkdir -p $1/empty-dir
 
 ####apache2 apache-htcacheclean clamav-freshclam cron cups dbus exim4 lightdm network-manager networking ntp openvpn rsyslog smbd ssh tor vitualbox;
 
-service lightdm stop
-echo "stopping services"
-for i in $(service --status-all 2>&1 | grep + | awk '{print $4}')
-do
-	echo service $i stop
-	service $i stop
-done
-service lightdm stop
+$SCRIPT_DIR/remount-root-read-only.sh
 
-echo "killing programs"
-for i in $(fuser -v -m / 2>&1 | grep " F" | awk '{print $2}')
-do
-	kill $i
-done
-
-echo "remount read-only"
-mount -no remount,ro /
 if [ $? -eq 0 ]; then
 	cd $dstDir
 	#mksquashfs empty-dir/ $dstFile -p 'sda_backup.img f 444 root root dd if=/dev/sda bs=32M conv=notrunc,fsync,noerror'
