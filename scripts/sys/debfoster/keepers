@@ -1,6 +1,19 @@
 
 vim-gtk
 meld
+gnucash
+gimp
+vlc
+git-cola
+chromium
+
+xfce4
+xmonad
+libreoffice-calc
+texlive-fonts-extra
+
+# keepass
+mono-complete
 
 # audo & video
 vlc
