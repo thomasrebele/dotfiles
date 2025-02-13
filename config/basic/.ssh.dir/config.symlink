@@ -12,6 +12,7 @@ Host localhost
 
 Host 192.168.0.250
 	Compression no
+	ForwardX11 no
 
 
 Host github.com
