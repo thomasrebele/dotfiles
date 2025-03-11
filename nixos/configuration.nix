@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./sway.nix
+      ./security.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -81,6 +82,10 @@
 
       gitFull
       git-cola
+
+      remmina
+
+#      python
     ];
   };
 
@@ -140,6 +145,7 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+  networking.firewall.enable = true;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
