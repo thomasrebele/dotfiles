@@ -89,6 +89,22 @@
     ];
   };
 
+  # virt-manager configuration
+  programs.virt-manager.enable = true;
+  users.groups.libvirtd.members = ["tr"];
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
+    spiceUSBRedirection.enable = true;
+  };
+  services.spice-vdagentd.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -110,6 +126,7 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
 
   # List services that you want to enable:
 
