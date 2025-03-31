@@ -84,7 +84,7 @@
       git-cola
 
       remmina
-
+      wl-clipboard # wayland-clipboard interaction
 #      python
     ];
   };
@@ -104,6 +104,16 @@
     spiceUSBRedirection.enable = true;
   };
   services.spice-vdagentd.enable = true;
+
+
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "tr" ];
+
+  # successor of vim, supports clipboard on wayland
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
