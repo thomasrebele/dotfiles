@@ -6,11 +6,11 @@ export GTK3_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 
 # automatic external monitor configuration
-if [ -f ~/software/autorandr/autorandr.py ]; then
-	autorandr="$(realpath ~/software/autorandr/autorandr.py) -c"
-	nohup ~/software/srandrd/srandrd -v -n $autorandr &> /tmp/xsession-srandr.log &
-	$autorandr
-fi
+# if [ -f ~/software/autorandr/autorandr.py ]; then
+# 	autorandr="$(realpath ~/software/autorandr/autorandr.py) -c"
+# 	nohup ~/software/srandrd/srandrd -v -n $autorandr &> /tmp/xsession-srandr.log &
+# 	$autorandr
+# fi
 
 # set wallpaper
 if type "feh" > /dev/null; then
