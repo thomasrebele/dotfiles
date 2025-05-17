@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./sway.nix
+      ./niri.nix
       ./security.nix
     ];
 
@@ -16,7 +17,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = ["apm=power_off" "reboot=acpi"];
-  boot.kernelModules = ["acpi_call"];
+  boot.kernelModules = ["acpi_call" 
+	"vfio" "vfio_iommu_type1" "vfio_pci" "kvmgt" "i915" "mdev"];
 
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
 
@@ -24,6 +26,18 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  # fix broken eth connection after waking up from suspend
+  systemd.services.networkmanager-resume = {
+    description = "Restart NetworkManager after suspend";
+    after = [ "suspend.target" ];
+    wantedBy = [ "suspend.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c '"+
+        "${pkgs.coreutils}/bin/sleep 8; "+
+        "${pkgs.systemd}/bin/systemctl restart NetworkManager'";
+    };
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -69,13 +83,18 @@
   users.users.tr = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    shell = pkgs.zsh;
     packages = with pkgs; [
       # command line tools
+      zsh
       tree
       ripgrep
+      # python for dir-shortener
+      python3Minimal
+      # container config generate script
+      python312Packages.pyyaml
 
       xfce.thunar
-      firefox
       thunderbird
       vlc
       gimp
@@ -85,9 +104,25 @@
 
       remmina
       wl-clipboard # wayland-clipboard interaction
+      copyq # clipboard manager
+      wdisplays # screen config GUI
+      guestfs-tools # provides virt-sparsify
 #      python
+      alacritty # opengl terminal emulator
+
+      podman # containerization
+
+      # mount usb
+      usbutils
+      udiskie
+      udisks
     ];
   };
+
+  # mount usb
+  services.devmon.enable = true;
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
 
   # virt-manager configuration
   programs.virt-manager.enable = true;
@@ -102,17 +137,30 @@
       };
     };
     spiceUSBRedirection.enable = true;
+    kvmgt.enable = true;
+    kvmgt.vgpus = {
+      "i915-GVTg_V5_4" = { uuid = [ "0457a510-9e19-4657-b695-8b3d9ef4b8b5" ]; };
+    };
   };
   services.spice-vdagentd.enable = true;
 
 
   virtualisation.virtualbox.host.enable = true;
+  users.extraUsers.tr.extraGroups = [ "libvirtd" "kvm" ];
   users.extraGroups.vboxusers.members = [ "tr" ];
+
+  # zsh
+  programs.zsh.enable = true;
 
   # successor of vim, supports clipboard on wayland
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+  };
+
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox;
   };
 
   # List packages installed in system profile. To search, run:
@@ -123,6 +171,10 @@
     acpitool # print battery stats
     tmux # terminal multiplexing
     linuxPackages.acpi_call # required for special battery settings (tpacpi-bat)
+
+    #virtmanager # added during nixos IGVT-g configuration
+
+    ddrescue # better dd for backups
   ];
 
   fonts.packages = with pkgs; [
