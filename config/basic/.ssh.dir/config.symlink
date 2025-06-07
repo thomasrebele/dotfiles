@@ -25,7 +25,7 @@ Host bitbucket.org
 Host *
 	ForwardX11 yes
 	Compression yes
-	GSSAPIAuthentication no
+	#	GSSAPIAuthentication no
 	ConnectTimeout 45
 	HostKeyAlgorithms ssh-ed25519
 

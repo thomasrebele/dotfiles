@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # default options
 link_repo="false"
@@ -33,7 +33,7 @@ github() {
 	local repo="$2"
 	local dest="$dir/${repo##*/}"
 	if [ ! -e "$dest" ]; then
-		git -C "$dir" clone --depth 1 "git://github.com/$repo"
+		git -C "$dir" clone --depth 1 "git@github.com:$repo"
 	else
 		echo "repository github.com/$repo exists in $dir"
 	fi

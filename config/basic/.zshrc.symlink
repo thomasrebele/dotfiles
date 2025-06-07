@@ -159,7 +159,7 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40
 
 
 ### fzf
-fzf_path="/home/tre/software/fzf"
+fzf_path="/home/tr/software/fzf"
 if [[ ! "$PATH" == *$fzf_path/bin* ]]; then
   export PATH="${PATH:+${PATH}:}$fzf_path/bin"
 fi
@@ -178,7 +178,7 @@ fi
 
 ### experimental, abandoned
 ### skim
-#skim_path="/home/tre/software/skim"
+#skim_path="/home/tr/software/skim"
 #if [[ ! "$PATH" == *$fzf_path/bin* ]]; then
 #  export PATH="${PATH:+${PATH}:}$fzf_path/bin"
 #fi
