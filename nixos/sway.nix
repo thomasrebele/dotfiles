@@ -7,6 +7,7 @@
     mako # notification system developed by swaywm maintainer
     kanshi # auto-detect plugging in monitor
     waybar # panel for sway
+    dmenu # launcher bar
     font-awesome # font needed by waybar
     swaylock # lock screen
   ];
