@@ -101,6 +101,7 @@
 
       gitFull
       git-cola
+      meld
 
       remmina
       wl-clipboard # wayland-clipboard interaction
@@ -111,18 +112,21 @@
       alacritty # opengl terminal emulator
 
       podman # containerization
+      zenity # easy dialogs (e.g., for calle)
 
       # mount usb
-      usbutils
-      udiskie
       udisks
+      # udiskie # automount
+
+      fwknop # connection to VPS
+      wget
     ];
   };
 
   # mount usb
   services.devmon.enable = true;
   services.gvfs.enable = true;
-  services.udisks2.enable = true;
+  #services.udisks2.enable = true; # automount
 
   # virt-manager configuration
   programs.virt-manager.enable = true;
@@ -172,13 +176,27 @@
     tmux # terminal multiplexing
     linuxPackages.acpi_call # required for special battery settings (tpacpi-bat)
 
+    usbutils
+    pciutils
+
     #virtmanager # added during nixos IGVT-g configuration
 
     ddrescue # better dd for backups
   ];
 
+  environment.shellAliases = {
+    vi = "nvim";
+  };
+
   fonts.packages = with pkgs; [
     font-awesome
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+    dejavu_fonts
+    # nixos 25.05 or later: nerd-fonts.droid-sans-mono
+    # (nerdfonts.override { fonts = [ "DroidSansMono " ]; })
+    # droid-sans-mono 
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
