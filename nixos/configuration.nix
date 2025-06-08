@@ -9,7 +9,6 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./sway.nix
-      ./niri.nix
       ./security.nix
     ];
 
@@ -90,7 +89,7 @@
       tree
       ripgrep
       # python for dir-shortener
-      python3Minimal
+      python3
       # container config generate script
       python312Packages.pyyaml
 
@@ -120,6 +119,8 @@
 
       fwknop # connection to VPS
       wget
+
+      anki-bin
     ];
   };
 
