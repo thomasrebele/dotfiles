@@ -73,6 +73,13 @@
   services.pipewire = {
     enable = true;
     pulse.enable = true;
+    extraConfig = {
+      pipewire."99-silent-bell.conf" = {
+        "context.properties" = {
+          "module.x11.bell" = false;
+	};
+      };
+    };
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
@@ -88,15 +95,23 @@
       zsh
       tree
       ripgrep
+      jq
+      mawk
+      zip
+      unzip
+      p7zip
+      inotify-tools # inotifywait
       # python for dir-shortener
       python3
       # container config generate script
       python312Packages.pyyaml
 
       xfce.thunar
+      xarchiver
       thunderbird
       vlc
       gimp
+      evince
 
       gitFull
       git-cola
@@ -121,8 +136,17 @@
       wget
 
       anki-bin
+      zoom-us
+      libreoffice
+
+      android-tools
+      scrcpy # connect with phone
     ];
   };
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "zoom"
+  ];
 
   # mount usb
   services.devmon.enable = true;
@@ -161,6 +185,14 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+    configure = {
+      customRC = ''
+        set backupcopy=yes
+        set number
+      '';
+    };
+    viAlias = true;
+    vimAlias = true;
   };
 
   programs.firefox = {
@@ -183,6 +215,8 @@
     #virtmanager # added during nixos IGVT-g configuration
 
     ddrescue # better dd for backups
+
+    glib # required by xdg-open
   ];
 
   environment.shellAliases = {
@@ -269,5 +303,26 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
 
+  # Locate command
+  services.locate.enable = true;
+
+  services.dbus.packages = with pkgs; [
+    xfce.xfconf # necessary to save settings in thunar, xfce4-terminal
+  ];
+
+  # Printing
+  nixpkgs.config.allowUnfree = true;
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.gutenprintBin pkgs.canon-cups-ufr2 ];
+  services.avahi = { # auto-detect printers
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  # enable LAN nic even when on battery
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="net", KERNEL=="enp0s31f6", ATTR{power/control}="on"
+  '';
 }
 
