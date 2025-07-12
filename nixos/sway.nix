@@ -10,6 +10,7 @@
     dmenu # launcher bar
     font-awesome # font needed by waybar
     swaylock # lock screen
+    gsimplecal # calendar
   ];
 
   # Enable the gnome-keyring secrets vault. 
