@@ -41,14 +41,14 @@
   services.displayManager.sddm.wayland.enable = true;
 
   # fingerprint login
-  services.fprintd = {
-    enable = true;
-    package = pkgs.fprintd-tod;
-    tod = {
-      enable = true;
-      driver = pkgs.libfprint-2-tod1-vfs0090;
-    };
-  };
+  #services.fprintd = {
+  #  enable = true;
+  #  package = pkgs.fprintd-tod;
+  #  tod = {
+  #    enable = true;
+  #    driver = pkgs.libfprint-2-tod1-vfs0090;
+  #  };
+  #};
 
 
   # text base login manager:

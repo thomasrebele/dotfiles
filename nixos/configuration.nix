@@ -74,6 +74,7 @@
     enable = true;
     pulse.enable = true;
     extraConfig = {
+      # disable alert sound (in keepass dialogs)
       pipewire."99-silent-bell.conf" = {
         "context.properties" = {
           "module.x11.bell" = false;
@@ -106,12 +107,12 @@
       # container config generate script
       python312Packages.pyyaml
 
-      xfce.thunar
       xarchiver
       thunderbird
       vlc
-      gimp
+      gimp3
       evince
+      geeqie
 
       gitFull
       git-cola
@@ -121,7 +122,7 @@
       wl-clipboard # wayland-clipboard interaction
       copyq # clipboard manager
       wdisplays # screen config GUI
-      guestfs-tools # provides virt-sparsify
+      #guestfs-tools # provides virt-sparsify
 #      python
       alacritty # opengl terminal emulator
 
@@ -137,10 +138,12 @@
 
       anki-bin
       zoom-us
-      libreoffice
+      #libreoffice
 
       android-tools
       scrcpy # connect with phone
+
+      ghostscript
     ];
   };
 
@@ -187,10 +190,13 @@
     defaultEditor = true;
     configure = {
       customRC = ''
+        " save files in a way so that inotifywait can watch them
+	" (i.e., do not create a new file, but overwrite the old one)
         set backupcopy=yes
         set number
       '';
     };
+    # make neovim the default
     viAlias = true;
     vimAlias = true;
   };
@@ -217,6 +223,10 @@
     ddrescue # better dd for backups
 
     glib # required by xdg-open
+
+    poppler # pdf-thumbnails in thunar
+    ffmpegthumbnailer
+    file-roller # needed for thunar "extract" and "compress" context menu
   ];
 
   environment.shellAliases = {
@@ -306,9 +316,18 @@
   # Locate command
   services.locate.enable = true;
 
-  services.dbus.packages = with pkgs; [
-    xfce.xfconf # necessary to save settings in thunar, xfce4-terminal
-  ];
+
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
+  };
+  # necessary to save settings in thunar, xfce4-terminal
+  programs.xfconf.enable = true;
+  services.tumbler.enable = true; # thumbnails
+  programs.file-roller.enable = true; # archive manager used by thunar
 
   # Printing
   nixpkgs.config.allowUnfree = true;
@@ -322,7 +341,7 @@
 
   # enable LAN nic even when on battery
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="net", KERNEL=="enp0s31f6", ATTR{power/control}="on"
+    ACTION!="remove", SUBSYSTEM=="net", ATTR{power/control}="on"
   '';
 }
 
