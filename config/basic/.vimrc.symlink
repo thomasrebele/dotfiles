@@ -536,10 +536,10 @@ endfunction
 autocmd VimEnter * call <SID>ToggleMouse()
 
 " track vim commands to track most used commands
-if executable("vim-stat.sh")
-    set verbose=9
-    set verbosefile=~/.vim-stat/current-log
-endif
+" if executable("vim-stat.sh")
+"     set verbose=9
+"     set verbosefile=~/.vim-stat/current-log
+" endif
 
 augroup XSD
     autocmd!
