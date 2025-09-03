@@ -19,9 +19,13 @@ set $term xfce4-terminal
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu dmenu_path | wmenu -bi | xargs swaymsg exec --
+
+# window switcher
 set $window_menu swaymsg -t get_tree | jq -r '.. | objects | select(.type == "con" and .name != null) | ((.id|tostring)+": "+.name)' | dmenu -l 10 -i -b | sed 's/:.*//' | xargs -I {} swaymsg '[con_id={}] focus'
 # could be improved by including the process command, but needs some speedup:
 # | awk '{ pid=$1; conid=$2; cmd="ps -p " pid " -o comm="; cmd | getline pname; close(cmd); gsub(/^[0-9]* [0-9]*: /, ""); print conid " " pname " " $0}
+# rofi, but only shows x11 windows; improve with https://gist.github.com/lbonn/89d064cde963cfbacabd77e0d3801398?permalink_comment_id=4924526#gistcomment-4924526
+# set $window_menu rofi -show window -window-command 'swaymsg "[[id={window}]] focus"' -kb-accept-alt 'Return' -kb-accept-entry 'Shift+Return' -matching fuzzy
 
 ### Output configuration
 #
