@@ -19,6 +19,9 @@ set $term xfce4-terminal
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu dmenu_path | wmenu -bi | xargs swaymsg exec --
+set $window_menu swaymsg -t get_tree | jq -r '.. | objects | select(.type == "con" and .name != null) | ((.id|tostring)+": "+.name)' | dmenu -l 10 -i -b | sed 's/:.*//' | xargs -I {} swaymsg '[con_id={}] focus'
+# could be improved by including the process command, but needs some speedup:
+# | awk '{ pid=$1; conid=$2; cmd="ps -p " pid " -o comm="; cmd | getline pname; close(cmd); gsub(/^[0-9]* [0-9]*: /, ""); print conid " " pname " " $0}
 
 ### Output configuration
 #
@@ -75,6 +78,8 @@ include "host-config/$(hostname)"
 
     # Start your launcher
     bindsym $mod+m exec $menu
+
+    bindsym $mod+b exec $window_menu
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -152,8 +157,8 @@ include "host-config/$(hostname)"
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+v splitv
+    bindsym $mod+Shift+b splith
+    bindsym $mod+Shift+v splitv
 
     # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
