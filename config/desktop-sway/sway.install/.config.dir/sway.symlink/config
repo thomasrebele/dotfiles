@@ -13,7 +13,7 @@ set $left n
 set $down h
 set $up g
 set $right r
-# Your preferred terminal emulator
+# Your default terminal emulator
 set $term xfce4-terminal
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
