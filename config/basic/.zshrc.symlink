@@ -278,3 +278,9 @@ fi
 if [ -e ~/.config/broot/launcher/bash/br ]; then
 	source ~/.config/broot/launcher/bash/br
 fi
+
+
+if [ -e /usr/share/ondir/integration/zsh ]; then
+  source /usr/share/ondir/integration/zsh
+fi
+
