@@ -25,6 +25,10 @@ do
 		mkdir "$dir"
 	fi
 	echo cp -r "$src/$i" "$dst/$i"
-	cp -r "$src/$i" "$dst/$i"
+        if [ ! -d "$i" ]; then
+		rsync -av "$src/$i/" "$dst/$i/"
+        else
+		cp -r "$src/$i" "$dst/$i"
+        fi
 done
 
