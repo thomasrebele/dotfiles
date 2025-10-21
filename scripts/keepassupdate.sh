@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 getVersion() {
 	content=$(wget http://keepass.info/download.html -q -O -)

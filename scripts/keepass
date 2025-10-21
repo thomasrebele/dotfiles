@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 kp=$(realpath ~/software/keepass/)
 
