@@ -14,6 +14,7 @@
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
+  #boot.loader.systemd-boot.memtest86.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = ["apm=power_off" "reboot=acpi"];
   boot.kernelModules = ["acpi_call" 
@@ -144,6 +145,7 @@
       scrcpy # connect with phone
 
       ghostscript
+      fortune
     ];
   };
 
@@ -343,5 +345,7 @@
   services.udev.extraRules = ''
     ACTION!="remove", SUBSYSTEM=="net", ATTR{power/control}="on"
   '';
+
+  services.logind.extraConfig = "HandleLidSwitchDocked=suspend";
 }
 
