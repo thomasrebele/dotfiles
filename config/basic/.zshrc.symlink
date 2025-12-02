@@ -282,5 +282,9 @@ fi
 
 if [ -e /usr/share/ondir/integration/zsh ]; then
   source /usr/share/ondir/integration/zsh
+  # ensure ondir scripts are executed for new tabs
+  ONDIR_TGT_DIR="$(pwd)"
+  cd /
+  cd "$ONDIR_TGT_DIR"
 fi
 
