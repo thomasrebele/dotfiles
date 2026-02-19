@@ -118,19 +118,22 @@
         "on-click": "gsimplecal"
     },
     "cpu": {
-        "format": "{usage} ",
-        "tooltip": false
+        "format": "{usage}\n",
+        "tooltip": false,
+	"justify": "center"
     },
     "memory": {
-        "format": "{} "
+        "format": "{}\n",
+	"justify": "center"
     },
     "temperature": {
         // "thermal-zone": 2,
         // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
 	// "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC} {icon}",
-        "format-icons": ["", "", ""]
+        "format": "{temperatureC}\n{icon}",
+        "format-icons": ["", "", ""],
+	"justify": "center"
     },
     "backlight": {
         // "device": "acpi_video1",
@@ -151,6 +154,7 @@
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         "format-icons": ["", "", "", "", ""],
+	"interval": "1",
 	"justify": "center"
     },
     "battery#bat2": {
