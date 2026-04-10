@@ -57,7 +57,7 @@ if-shell -b '[ "$(echo "$TMUX_VERSION < 2.4" | bc)" = 1 ]' \
 
 # copy into clipboard buffer
 if-shell -b '[ "$(echo "$TMUX_VERSION < 2.4" | bc)" = 1 ]' \
-	'bind -t vi-copy y copy-pipe "xclip -sel clip -i"; ' \
-	'bind -T copy-mode-vi y copy-pipe "xclip -sel clip -i"; ' \
+	'bind -t vi-copy y send-keys -X copy-pipe "xclip -sel clip -i"; ' \
+	'bind -T copy-mode-vi y send-keys -X copy-pipe "xclip -sel clip -i"; ' \
 
 set -g @plugin 'tmux-plugins/tmux-yank'
