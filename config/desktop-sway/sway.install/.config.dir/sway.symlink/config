@@ -40,6 +40,7 @@ set $window_menu swaymsg -t get_tree | jq -r '.. | objects | select(.type == "co
 
 # Redirect to host-specific config file, so that each host can configure its own monitor arrangement
 include "host-config/$(hostname)"
+include "display-config/$(~/.dotfiles/scripts/host-display-id.sh)"
 
 ### Idle configuration
 #
