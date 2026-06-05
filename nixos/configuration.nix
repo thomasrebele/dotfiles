@@ -96,7 +96,6 @@
       # command line tools
       zsh
       tree
-      ripgrep
       jq
       mawk
       zip
@@ -156,7 +155,7 @@
   # mount usb
   services.devmon.enable = true;
   services.gvfs.enable = true;
-  #services.udisks2.enable = true; # automount
+  services.udisks2.enable = true; # automount
 
   # virt-manager configuration
   programs.virt-manager.enable = true;
@@ -166,8 +165,7 @@
       enable = true;
       qemu = {
         swtpm.enable = true;
-        ovmf.enable = true;
-        ovmf.packages = [ pkgs.OVMFFull.fd ];
+        # removed to upgrade to 25.11: ovmf.enable = true; ovmf.packages = [ pkgs.OVMFFull.fd ];
       };
     };
     spiceUSBRedirection.enable = true;
@@ -216,6 +214,7 @@
     acpitool # print battery stats
     tmux # terminal multiplexing
     linuxPackages.acpi_call # required for special battery settings (tpacpi-bat)
+    ripgrep
 
     usbutils
     pciutils
@@ -239,7 +238,8 @@
     font-awesome
     noto-fonts
     noto-fonts-cjk-sans
-    noto-fonts-emoji
+    # renamed in 25.11: noto-fonts-emoji
+    noto-fonts-color-emoji
     dejavu_fonts
     # nixos 25.05 or later: nerd-fonts.droid-sans-mono
     # (nerdfonts.override { fonts = [ "DroidSansMono " ]; })
@@ -329,7 +329,7 @@
   # necessary to save settings in thunar, xfce4-terminal
   programs.xfconf.enable = true;
   services.tumbler.enable = true; # thumbnails
-  programs.file-roller.enable = true; # archive manager used by thunar
+  # removed to upgrade to 25.11: programs.file-roller.enable = true; # archive manager used by thunar
 
   # Printing
   nixpkgs.config.allowUnfree = true;
@@ -346,6 +346,6 @@
     ACTION!="remove", SUBSYSTEM=="net", ATTR{power/control}="on"
   '';
 
-  services.logind.extraConfig = "HandleLidSwitchDocked=suspend";
+  # removed to upgrade to 25.11: services.logind.extraConfig = "HandleLidSwitchDocked=suspend";
 }
 
