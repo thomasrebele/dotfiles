@@ -12,13 +12,31 @@
       ./security.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  #boot.loader.systemd-boot.memtest86.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = ["apm=power_off" "reboot=acpi"];
-  boot.kernelModules = ["acpi_call" 
-	"vfio" "vfio_iommu_type1" "vfio_pci" "kvmgt" "i915" "mdev"];
+  boot = {
+    # force import might corrupt the zfs pool
+    zfs.forceImportRoot = false;
+      # Use the systemd-boot EFI boot loader.
+      loader = {
+        systemd-boot.enable = true;
+        #systemd-boot.memtest86.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
+
+    kernelParams = ["apm=power_off" "reboot=acpi"];
+    kernelModules = ["acpi_call" "vfio" "vfio_iommu_type1" "vfio_pci" "kvmgt" "i915" "mdev"];
+
+    # fileSystems."/".device = "luks-rpool-nvme-LENSE20256GMSP34MEAT2TA_FBFB18040CC0000437-part2";
+    # fileSystems."/".options = [ "x-systemd.device-timeout=infinity" ];
+    initrd = {
+      systemd.enable = true; # stage-1 systemd
+      luks.devices.luks-rpool-nvme-LENSE20256GMSP34MEAT2TA_FBFB18040CC0000437-part2 = {
+        #device = "/dev/disk/by-id/nvme-LENSE20256GMSP34MEAT2TA_FBFB18040CC0000437-part2";
+        preLVM = true;
+      };
+    };
+  };
+
+
 
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
 
@@ -162,7 +180,8 @@
   users.groups.libvirtd.members = ["tr"];
   virtualisation = {
     libvirtd = {
-      enable = true;
+      enable = false;
+      onBoot = "ignore";
       qemu = {
         swtpm.enable = true;
         # removed to upgrade to 25.11: ovmf.enable = true; ovmf.packages = [ pkgs.OVMFFull.fd ];
