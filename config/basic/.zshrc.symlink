@@ -288,3 +288,7 @@ if [ -e /usr/share/ondir/integration/zsh ]; then
   cd "$ONDIR_TGT_DIR"
 fi
 
+if [ -e ~/.zshrc.tokens ]; then
+  source ~/.zshrc.tokens
+fi
+
