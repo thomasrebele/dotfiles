@@ -245,6 +245,9 @@ bar {
     }
 }
 
+# mouse cursor theme (fix disappearing cursor when moving borders, or in the browser)
+seat * xcursor_theme Adwaita 40
+
 # behavior
 focus_follows_mouse no
 
