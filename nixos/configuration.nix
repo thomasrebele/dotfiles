@@ -247,6 +247,8 @@
     poppler # pdf-thumbnails in thunar
     ffmpegthumbnailer
     file-roller # needed for thunar "extract" and "compress" context menu
+
+    hicolor-icon-theme # try this to fix slow git-cola startup?
   ];
 
   environment.shellAliases = {
@@ -264,6 +266,8 @@
     # (nerdfonts.override { fonts = [ "DroidSansMono " ]; })
     # droid-sans-mono 
   ];
+
+  gtk.iconCache.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
