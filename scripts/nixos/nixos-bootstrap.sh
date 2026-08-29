@@ -35,9 +35,9 @@ create-image() {
   IMG="$1"
   truncate -s 5G "$IMG"
   parted "$IMG" -- mklabel msdos
-  parted "$IMG" -- mkpart primary fat32 1MiB 512MiB
+  parted "$IMG" -- mkpart primary fat32 1MiB 150MiB
   parted "$IMG" -- set 1 boot on
-  parted "$IMG" -- mkpart primary ext4 512MiB 100%
+  parted "$IMG" -- mkpart primary ext4 150MiB 100%
 
   prep-loop "$IMG"
   sudo sh -c "
@@ -87,7 +87,8 @@ copy-config() {
   IMG="$1"
   BASE="$(realpath $(dirname "$IMG"))"
   CONF_DIR="$BASE/mnt/etc/nixos/"
-  mkdir -p "$CONF_DIR"
+  printf "using conf dir %s\n" "$CONF_DIR"
+  mkdir -p "$CONF_DIR/"
 
   mount-image "$IMG"
 
