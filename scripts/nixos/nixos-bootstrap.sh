@@ -43,19 +43,19 @@ create-image() {
   sudo sh -c "
     mkfs.vfat -F32 -n boot \"${LOOP}p1\";
     mkfs.ext4 -L nixos \"${LOOP}p2\";
-    e2label \"{LOOP}p2\" nixos-usb-sys
+    e2label \"${LOOP}p2\" nixos-usb-sys
     "
 
 }
 
 prep-loop() {
-  IMG="$1"
-  LOOP=$(losetup -a | grep "\($IMG\)" | sed 's/:.*//' | head -n 1)
+  IMG="$(realpath "$1")"
+  LOOP=$(losetup -a | grep "($IMG)" | sed 's/:.*//' | head -n 1 || echo "")
   if [ "$LOOP" = "" ]; then
     udisksctl loop-setup -f "$IMG"
     # alternatively: sudo losetup -fP "$IMG"
   fi
-  LOOP=$(losetup -a | grep "\($IMG\)" | sed 's/:.*//' | head -n 1)
+  LOOP=$(losetup -a | grep "($IMG)" | sed 's/:.*//' | head -n 1)
   
   printf "loop device: %s\n" "$LOOP"
 }
@@ -85,15 +85,19 @@ umount-image() {
 
 copy-config() {
   IMG="$1"
+  BASE="$(realpath $(dirname "$IMG"))"
+  CONF_DIR="$BASE/mnt/etc/nixos/"
+  mkdir -p "$CONF_DIR"
+
   mount-image "$IMG"
 
 
-  if [ -f "$BASE/mnt/etc/nixos/configuration.nix" ]; then
+  if [ -f "$CONF_DIR/configuration.nix" ]; then
     echo "config file exists, do not overwrite"
     return
   fi
 
-cat > "$BASE/mnt/etc/nixos/hardware-configuration.nix" <<EOF
+cat > "$CONF_DIR/hardware-configuration.nix" <<EOF
 # modify configuration.nix instead
 { config, lib, pkgs, modulesPath, ... }:
  
@@ -126,7 +130,7 @@ cat > "$BASE/mnt/etc/nixos/configuration.nix" <<EOF
     enable = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
-    device = "/dev/loop0";
+    device = "${LOOP}";
     #useOSProber = false;
   };
 
